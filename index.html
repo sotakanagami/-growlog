@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrowLog - 上達を加速させる練習ノート</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050B14;
+            --panel-bg: rgba(13, 27, 42, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary: #0EA5E9;
+            --primary-gradient: linear-gradient(135deg, #0EA5E9 0%, #2563EB 100%);
+            --accent: #10B981;
+            --accent-gradient: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --text-dark: #64748B;
+            --card-glow: rgba(14, 165, 233, 0.15);
+            --danger: #EF4444;
+            --orange: #F97316;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(37, 99, 235, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            padding-bottom: 60px;
+        }
+
+        header {
+            padding: 24px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(5, 11, 20, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: var(--primary-gradient);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-tag {
+            font-size: 10px;
+            background: rgba(14, 165, 233, 0.15);
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 99px;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            font-weight: 600;
+        }
+
+        .btn-new-log {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-new-log:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35);
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 32px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* サイドバー */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .stats-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-lbl {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ログ一覧 */
+        .log-list-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-list-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .log-items {
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-right: 4px;
+        }
+
+        .log-item-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .log-item-card:hover, .log-item-card.active {
+            background: rgba(14, 165, 233, 0.06);
+            border-color: rgba(14, 165, 233, 0.3);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.05);
+        }
+
+        .log-item-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .log-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .log-item-tag {
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-right: 6px;
+            font-weight: bold;
+        }
+
+        .tag-foil {
+            background: rgba(14, 165, 233, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .tag-techno {
+            background: rgba(249, 115, 22, 0.15);
+            color: var(--orange);
+            border: 1px solid rgba(249, 115, 22, 0.2);
+        }
+
+        .log-item-wind {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        /* メインコンテンツエリア */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* 最新ネクストアクション看板 */
+        .next-action-banner {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(37, 99, 235, 0.05) 100%);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 8px 32px rgba(14, 165, 233, 0.05);
+        }
+
+        .next-action-icon {
+            background: var(--primary);
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
+            flex-shrink: 0;
+        }
+
+        .next-action-info h4 {
+            font-size: 12px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .next-action-info p {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* 詳細ビュー */
+        .detail-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            min-height: 500px;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .detail-meta-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .detail-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .detail-date-loc {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* グリッドレイアウト */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-section {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .condition-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .setting-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            padding-bottom: 8px;
+        }
+
+        .setting-val {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .note-content {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #E2E8F0;
+            white-space: pre-wrap;
+        }
+
+        /* 生成されたネクストアクション表示エリア */
+        .ai-action-panel {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.02) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        .ai-title {
+            color: var(--accent);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .ai-plan {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #E2E8F0;
+        }
+
+        .ai-plan ul {
+            margin-left: 20px;
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        /* フォームモーダル */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 11, 20, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background: #0D1B2A;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 750px;
+            max-height: 90vh;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .modal.open .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        }
+
+        .slider-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider-group input {
+            flex: 1;
+        }
+
+        .slider-val {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 45px;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-save {
+            background: var(--accent-gradient);
+            border: none;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            transition: all 0.2s;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .empty-icon {
+            background: rgba(255, 255, 255, 0.02);
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <!-- Inline SVG for trending-up -->
+            <div class="logo-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            </div>
+            <div>
+                <span class="logo-text">GrowLog</span>
+                <span class="logo-tag">PROTOTYPE V3.2</span>
+            </div>
+        </div>
+        <button class="btn-new-log" onclick="openModal()">
+            <!-- Inline SVG for plus-circle -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            練習ノートを書く
+        </button>
+    </header>
+
+    <main>
+        <!-- 左カラム：サイドバー -->
+        <div class="sidebar">
+            <!-- 統計情報 -->
+            <div class="stats-panel">
+                <h3 class="stats-title">練習スタッツ</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-count">0</div>
+                        <div class="stat-lbl">総練習日数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-hours">0</div>
+                        <div class="stat-lbl">風速平均 (m)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ログ一覧 -->
+            <div class="log-list-panel">
+                <div class="log-list-header">
+                    <span>練習ログ履歴</span>
+                    <!-- Inline SVG for calendar -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div class="log-items" id="log-items-container">
+                    <!-- JavaScriptで動的にログを挿入 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 右カラム：メインコンテンツ -->
+        <div class="content-area">
+            <!-- ネクストアクション看板 -->
+            <div class="next-action-banner" id="banner-action" style="display: none;">
+                <div class="next-action-icon">
+                    <!-- Inline SVG for compass -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                </div>
+                <div class="next-action-info">
+                    <h4>次回の最優先テストアクション</h4>
+                    <p id="banner-action-text">課題を登録すると、ここにネクストアクションが表示されます。</p>
+                </div>
+            </div>
+
+            <!-- 詳細ビューパネル -->
+            <div class="detail-panel" id="detail-panel">
+                <!-- 初期状態の空画面 -->
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <!-- Inline SVG for book-open -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
+                    <div>
+                        <h3 style="color: white; margin-bottom: 8px;">ログが選択されていません</h3>
+                        <p style="font-size: 14px;">左の履歴から選択するか、新しく練習ノートを記入してください。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 新規登録用モーダル -->
+    <div class="modal" id="log-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">新規練習ノート作成</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <!-- Inline SVG for x -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- 基本情報 -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="form-date">日付</label>
+                        <input type="date" id="form-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-location">練習場所</label>
+                        <input type="text" id="form-location" placeholder="例: 鎌倉・材木座" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="form-discipline">種目（モード）</label>
+                        <select id="form-discipline" onchange="toggleDisciplineFields(this.value)">
+                            <option value="テクノ293">テクノ293 (学生・ジュニア指導用)</option>
+                            <option value="フォイルスラローム">フォイルスラローム (プロ仕様)</option>
+                            <option value="フォイルフォーミュラ">フォイルフォーミュラ (プロ仕様)</option>
+                            <option value="フィンスラローム">フィンスラローム</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+                    <div class="form-row" style="grid-template-columns: 1.2fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label for="form-wind">風速 (m/s)</label>
+                            <div class="slider-group">
+                                <input type="range" id="form-wind" min="1" max="30" value="8" oninput="updateWindValue(this.value)">
+                                <span class="slider-val" id="wind-val-display">8 m</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-wind-dir">風向</label>
+                            <input type="text" id="form-wind-dir" placeholder="例: 南南西、SW" value="南西">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- コンディション -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="form-sea">海面コンディション</label>
+                        <select id="form-sea">
+                            <option value="フラット海面">フラット海面</option>
+                            <option value="小チョップ">小チョップ</option>
+                            <option value="中チョップ（波立ち）">中チョップ（波立ち）</option>
+                            <option value="大うねり（爆風）">大うねり（爆風）</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-weather">天気</label>
+                        <select id="form-weather">
+                            <option value="晴れ">晴れ</option>
+                            <option value="曇り">曇り</option>
+                            <option value="雨">雨</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 道具設定（フォイル用とテクノ用で動的に分ける） -->
+                <h4 style="font-size: 14px; color: var(--primary); margin-top: 10px;">ギアセッティング</h4>
+                
+                <!-- 共通項目：セイル -->
+                <div class="form-group">
+                    <label for="form-sail">セイルサイズ (㎡)</label>
+                    <input type="text" id="form-sail" placeholder="例: 7.8 (テクノ規定サイズ)" value="7.8">
+                </div>
+
+                <!-- 【テクノ293用ギア設定】 -->
+                <div id="techno-gear-fields" style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="form-techno-ext">エクステンションの長さ (cm)</label>
+                            <select id="form-techno-ext">
+                                <option value="24">24</option>
+                                <option value="26">26</option>
+                                <option value="28">28</option>
+                                <option value="30">30</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-techno-down">ダウンテンション</label>
+                            <input type="text" id="form-techno-down" placeholder="例: ベタ引き、残り1cmなど" value="ベタ引き">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="form-techno-pin">ブームのピン</label>
+                            <select id="form-techno-pin">
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6" selected>6</option>
+                                <option value="7">7</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-techno-out">アウトテンション</label>
+                            <input type="text" id="form-techno-out" placeholder="例: +1cm、ニュートラルなど" value="ニュートラル">
+                        </div>
+                    </div>
+                    
+                    <!-- バテンテンション 1〜6番個別入力エリア -->
+                    <div class="form-group">
+                        <label>バテンテンション (各番の角度で記録 例: 90°)</label>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 6px; background: rgba(255,255,255,0.01); padding: 12px; border-radius: 10px; border: 1px solid var(--border-color);">
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#1 (トップ)</span>
+                                <input type="text" id="form-techno-batten-1" value="90°" style="padding: 6px 10px; text-align: center;">
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#2</span>
+                                <input type="text" id="form-techno-batten-2" value="90°" style="padding: 6px 10px; text-align: center;">
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#3</span>
+                                <input type="text" id="form-techno-batten-3" value="90°" style="padding: 6px 10px; text-align: center;">
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#4</span>
+                                <input type="text" id="form-techno-batten-4" value="90°" style="padding: 6px 10px; text-align: center;">
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#5</span>
+                                <input type="text" id="form-techno-batten-5" value="90°" style="padding: 6px 10px; text-align: center;">
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#6 (ボトム)</span>
+                                <input type="text" id="form-techno-batten-6" value="90°" style="padding: 6px 10px; text-align: center;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="form-techno-boom">ブームの高さ</label>
+                            <input type="text" id="form-techno-boom" placeholder="例: 胸の高さ、顎の高さなど" value="胸の高さ">
+                        </div>
+                        <div class="form-group">
+                            <label for="form-techno-other">その他（ハーネスライン等）</label>
+                            <input type="text" id="form-techno-other" placeholder="例: ハーネスライン28インチなど" value="なし">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 【フォイル用ギア設定】 -->
+                <div id="foil-gear-fields" style="display: none; flex-direction: column; gap: 20px; width: 100%;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="form-foil-mast">マストジョイント位置 (mm)</label>
+                            <input type="text" id="form-foil-mast" placeholder="例: 155" value="155">
+                        </div>
+                        <div class="form-group">
+                            <label for="form-foil-stabilizer">スタビライザー (リアウイング)</label>
+                            <input type="text" id="form-foil-stabilizer" placeholder="例: 140" value="140">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="form-foil-shim">スタビライザー・シム (mm)</label>
+                        <input type="text" id="form-foil-shim" placeholder="例: 2.0" value="2.0">
+                    </div>
+                </div>
+
+                <!-- 🏁 ラウンディング（レース練習）レポート -->
+                <h4 style="font-size: 14px; color: var(--primary); margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+                    <span>🏁 ラウンディング（レース練習）レポート</span>
+                    <button type="button" class="btn-new-log" style="padding: 4px 12px; font-size: 11px; background: var(--accent-gradient); box-shadow: none;" onclick="addRaceForm()">
+                        <!-- Inline SVG for plus -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        レースを追加
+                    </button>
+                </h4>
+                <div id="form-race-container" style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+                    <!-- JavaScriptで動的にレースフォームブロックを追加 -->
+                </div>
+
+                <!-- ノート内容 -->
+                <h4 style="font-size: 14px; color: var(--primary); margin-top: 10px;">練習メモ</h4>
+                <div class="form-group">
+                    <label for="form-feeling">今日の気づき・感覚</label>
+                    <textarea id="form-feeling" rows="3" placeholder="走りの調子、道具の当たり感、良かった動作などを記入します。"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="form-issue">今日の課題・改善したいこと</label>
+                    <textarea id="form-issue" rows="3" placeholder="例:「上りの角度が取れない」「下りでプレーニングしない」「ジャイブで沈（チン）する」など、課題を記入してください。" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
+                <button class="btn-save" onclick="saveLog()">ノートを保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScriptロジック -->
+    <script>
+        // 安全なローカルストレージのヘルパークラス（SecurityErrorを防止し、100%の動作を保証）
+        const StorageHelper = {
+            memoryStorage: {},
+
+            isSupported() {
+                try {
+                    const testKey = '__storage_test__';
+                    localStorage.setItem(testKey, testKey);
+                    localStorage.removeItem(testKey);
+                    return true;
+                } catch (e) {
+                    return false; // file:// スキーマやプライベートモードでのエラーを検知
+                }
+            },
+
+            getItem(key) {
+                if (this.isSupported()) {
+                    try {
+                        return localStorage.getItem(key);
+                    } catch (e) {
+                        console.warn("localStorage.getItem failed, using memory fallback", e);
+                    }
+                }
+                return this.memoryStorage[key] || null;
+            },
+
+            setItem(key, value) {
+                if (this.isSupported()) {
+                    try {
+                        localStorage.setItem(key, value);
+                        return;
+                    } catch (e) {
+                        console.warn("localStorage.setItem failed, using memory fallback", e);
+                    }
+                }
+                this.memoryStorage[key] = value;
+            }
+        };
+
+        // 新スキーマ対応のストレージキー（v3.2）
+        const STORAGE_KEY = 'growlog_records_v3_2';
+        let logs = [];
+        let activeLogId = null;
+        let raceCount = 0;
+
+        // 初期化
+        window.addEventListener('DOMContentLoaded', () => {
+            loadLogs();
+            document.getElementById('form-date').valueAsDate = new Date();
+        });
+
+        // モード変更によってフォームフィールドを切り替える
+        function toggleDisciplineFields(val) {
+            const technoFields = document.getElementById('techno-gear-fields');
+            const foilFields = document.getElementById('foil-gear-fields');
+            const sailInput = document.getElementById('form-sail');
+
+            if (val === 'テクノ293') {
+                technoFields.style.display = 'flex';
+                foilFields.style.display = 'none';
+                sailInput.value = '7.8';
+                sailInput.placeholder = '例: 7.8 (テクノ規定サイズ)';
+            } else if (val.includes('フォイル')) {
+                technoFields.style.display = 'none';
+                foilFields.style.display = 'flex';
+                sailInput.value = '7.0';
+                sailInput.placeholder = '例: SEVERNE 7.0';
+            } else {
+                technoFields.style.display = 'none';
+                foilFields.style.display = 'none';
+                sailInput.placeholder = '例: 7.0';
+            }
+        }
+
+        // 風速スライダー表示更新
+        function updateWindValue(val) {
+            document.getElementById('wind-val-display').innerText = val + ' m';
+        }
+
+        // モーダル開閉
+        function openModal() {
+            document.getElementById('log-modal').classList.add('open');
+            document.getElementById('form-date').valueAsDate = new Date();
+            document.getElementById('form-discipline').value = 'テクノ293';
+            toggleDisciplineFields('テクノ293');
+        }
+
+        function closeModal() {
+            document.getElementById('log-modal').classList.remove('open');
+            resetForm();
+        }
+
+        function resetForm() {
+            document.getElementById('form-location').value = '';
+            document.getElementById('form-feeling').value = '';
+            document.getElementById('form-issue').value = '';
+            document.getElementById('form-wind').value = 8;
+            document.getElementById('form-wind-dir').value = '南西';
+            document.getElementById('form-race-container').innerHTML = '';
+            raceCount = 0;
+            updateWindValue(8);
+        }
+
+        // 動的なレースフォームブロックの追加
+        function addRaceForm(data = { rank: '', start: '', memo: '' }) {
+            raceCount++;
+            const container = document.getElementById('form-race-container');
+            const raceDiv = document.createElement('div');
+            raceDiv.className = 'form-race-block';
+            raceDiv.id = `form-race-block-${raceCount}`;
+            raceDiv.style = 'background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; display: flex; flex-direction: column; gap: 10px; position: relative;';
+
+            raceDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+                    <span style="font-size: 12px; font-weight: bold; color: var(--primary);">Race ${raceCount}</span>
+                    <button type="button" style="background:none; border:none; color:var(--danger); cursor:pointer;" onclick="removeRaceForm(${raceCount})">
+                        <!-- Inline SVG for trash-2 -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                    </button>
+                </div>
+                <div class="form-row" style="margin-top: 4px;">
+                    <div class="form-group">
+                        <label>順位</label>
+                        <input type="text" class="race-rank" placeholder="例: 3位 / 15艇中" value="${data.rank}">
+                    </div>
+                    <div class="form-group">
+                        <label>スタート状況</label>
+                        <input type="text" class="race-start" placeholder="例: ジャスト、下1からなど" value="${data.start}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>レースメモ</label>
+                    <textarea class="race-memo" rows="2" placeholder="レース展開、良かった点、失敗したポイントなど" style="font-size: 13px;">${data.memo}</textarea>
+                </div>
+            `;
+            container.appendChild(raceDiv);
+        }
+
+        // レースフォームブロックの削除
+        function removeRaceForm(id) {
+            const block = document.getElementById(`form-race-block-${id}`);
+            if (block) {
+                block.remove();
+                reindexRaces();
+            }
+        }
+
+        // レース番号のリインデックス
+        function reindexRaces() {
+            const blocks = document.querySelectorAll('.form-race-block');
+            raceCount = 0;
+            blocks.forEach((block) => {
+                raceCount++;
+                block.id = `form-race-block-${raceCount}`;
+                const label = block.querySelector('span');
+                if (label) label.innerText = `Race ${raceCount}`;
+                const deleteBtn = block.querySelector('button');
+                if (deleteBtn) {
+                    deleteBtn.setAttribute('onclick', `removeRaceForm(${raceCount})`);
+                }
+            });
+        }
+
+        // ローカルストレージから読み込み（StorageHelperを使用）
+        function loadLogs() {
+            const data = StorageHelper.getItem(STORAGE_KEY);
+            if (data) {
+                try {
+                    logs = JSON.parse(data);
+                    logs.sort((a, b) => new Date(b.date) - new Date(a.date));
+                } catch (e) {
+                    console.error("Data parse error, loading sample data", e);
+                    logs = getSampleData();
+                }
+            } else {
+                logs = getSampleData();
+                StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logs));
+            }
+            renderLogList();
+            updateStats();
+            if (logs.length > 0) {
+                selectLog(logs[0].id);
+            } else {
+                renderEmptyDetail();
+            }
+        }
+
+        // サンプルデータの作成
+        function getSampleData() {
+            return [
+                {
+                    id: 'sample-techno-v3-2',
+                    date: '2026-06-29',
+                    location: '鎌倉・材木座',
+                    discipline: 'テクノ293',
+                    wind: 5,
+                    windDir: '南南西',
+                    sea: 'フラット海面',
+                    weather: '晴れ',
+                    sail: '7.8',
+                    ext: '26',
+                    down: 'ベタ引き',
+                    pin: '6',
+                    out: 'ニュートラル',
+                    battens: ['90°', '90°', '90°', '90°', '90°', '90°'],
+                    boom: '胸の高さ',
+                    other: 'ハーネスライン28インチ',
+                    feeling: '風速3〜5mのアンダーコンディション。国大の学生たちと合同で上り下りのレース練習を行う。微風時にダガーを出した状態での上りのスピードが学生たちに伸び悩んでいる様子。',
+                    issue: 'クローズホールド（上り）で角度が取れず、下りのレグで他の艇に抜かれてしまう。パンピングの持続力が足りない。',
+                    races: [
+                        { rank: '2位 / 12艇中', start: '上3からジャストスタート。', memo: '上りのスピード・角度はまずまず。ダガーを完璧に垂直に下ろした。下りでダガーの収納が少し遅れ、アビームで抜かれて2位。' },
+                        { rank: '4位 / 12艇中', start: '少し遅れて2列目から。', memo: 'スタートミスで悪い風を受けた。下りのパンピングで追い上げたが順位は4位まで。パンピングの落とし込みがまだ甘い。' }
+                    ],
+                    nextAction: {
+                        title: 'テクノ293：上りの角度改善 ＆ 下りプレーニング移行',
+                        detail: `テクノ293での上りと下りの走りを改善するため、次回以下の項目をアジャストします。
+                        <ul>
+                            <li><strong>【上りの角度対策】</strong>:
+                                <br>上りレグでダガーが「水面に対して垂直（限界）」まで下りているか確認する。フットストラップにダガーベルトが引っかかって、数センチ浮いてしまっているケースが多いため、しっかり踏み下ろすよう学生に指導します。
+                            </li>
+                            <li><strong>【マスト位置アジャスト】</strong>:
+                                <br>次回はマストベース位置を「基準（中）」から**「少し前」**に調整します。バウ（ノーズ）を水面に接地させることで横流れ（リーウェイ）が減り、驚くほどクローズホールドの角度が取れるようになります。
+                            </li>
+                            <li><strong>【下り（ランニング）対策】</strong>:
+                                <br>アビーム・ランニングに入った瞬間にダガーを「完全に100%収納」させます。3センチでも出ていると、猛烈な引きずり抵抗になりプレーニングしません。
+                            </li>
+                            <li><strong>【パンピング技術】</strong>: 体だけでセイルを漕ぐのではなく、ブームを高め（肩・顎）にセットし、ハーネスラインにぶら下がりながら「体全体の体重（落とし込み）」を利用して引き込むシンクロ率を高めます。</li>
+                        </ul>`
+                    }
+                }
+            ];
+        }
+
+        // 統計情報の更新
+        function updateStats() {
+            document.getElementById('stat-count').innerText = logs.length;
+            if (logs.length > 0) {
+                const totalWind = logs.reduce((sum, log) => sum + parseInt(log.wind || 0), 0);
+                const avgWind = (totalWind / logs.length).toFixed(1);
+                document.getElementById('stat-hours').innerText = avgWind + 'm';
+            } else {
+                document.getElementById('stat-hours').innerText = '0m';
+            }
+        }
+
+        // リスト描画
+        function renderLogList() {
+            const container = document.getElementById('log-items-container');
+            container.innerHTML = '';
+
+            if (logs.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:20px; font-size:12px; color:var(--text-muted);">ログがありません</div>`;
+                return;
+            }
+
+            logs.forEach(log => {
+                const card = document.createElement('div');
+                card.className = `log-item-card ${log.id === activeLogId ? 'active' : ''}`;
+                card.onclick = () => selectLog(log.id);
+
+                const isTechno = log.discipline === 'テクノ293';
+                const tagClass = isTechno ? 'tag-techno' : 'tag-foil';
+                const tagText = isTechno ? 'TECHNO' : 'FOIL';
+
+                card.innerHTML = `
+                    <div class="log-item-meta">
+                        <span>${log.date || ''}</span>
+                        <span>${log.location || ''}</span>
+                    </div>
+                    <div class="log-item-title">
+                        <span class="log-item-tag ${tagClass}">${tagText}</span>
+                        ${log.discipline || 'その他'}
+                    </div>
+                    <div class="log-item-wind">
+                        <!-- Inline SVG for wind -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+                        <span>風速 ${log.wind || 0} m/s</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // ログ詳細の選択
+        function selectLog(id) {
+            activeLogId = id;
+            renderLogList();
+
+            const log = logs.find(l => l.id === id);
+            if (!log) return;
+
+            // ネクストアクション看板の更新
+            const banner = document.getElementById('banner-action');
+            const bannerText = document.getElementById('banner-action-text');
+            if (log.nextAction) {
+                banner.style.display = 'flex';
+                bannerText.innerHTML = log.nextAction.title;
+            } else {
+                banner.style.display = 'none';
+            }
+
+            const isTechno = log.discipline === 'テクノ293';
+
+            // ギアリストをモード（種目）によって出し分ける
+            let gearHtml = '';
+            if (isTechno) {
+                const battens = log.battens || ['90°', '90°', '90°', '90°', '90°', '90°'];
+                const battenListHtml = battens.map((b, i) => `#${i+1}➔${b}`).join(' | ');
+
+                gearHtml = `
+                    <div class="setting-item">
+                        <span>セイルサイズ</span>
+                        <span class="setting-val">${log.sail || '7.8'} ㎡</span>
+                    </div>
+                    <div class="setting-item">
+                        <span>エクステンション</span>
+                        <span class="setting-val">${log.ext || '26'} cm</span>
+                    </div>
+                    <div class="setting-item">
+                        <span>ダウンテンション</span>
+                        <span class="setting-val">${log.down || 'ベタ引き'}</span>
+                    </div>
+                    <div class="setting-item">
+                        <span>ブームのピン</span>
+                        <span class="setting-val">${log.pin || '6'}</span>
+                    </div>
+                    <div class="setting-item">
+                        <span>アウトテンション</span>
+                        <span class="setting-val">${log.out || 'ニュートラル'}</span>
+                    </div>
+                    <div class="setting-item" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+                        <span>バテンテンション (#1〜#6)</span>
+                        <span class="setting-val" style="font-size:12px; color:var(--accent); font-family:monospace; font-weight:700;">${battenListHtml}</span>
+                    </div>
+                    <div class="setting-item">
+                        <span>ブームの高さ</span>
+                        <span class="setting-val">${log.boom || '胸の高さ'}</span>
+                    </div>
+                    <div class="setting-item">
+                        <span>その他</span>
+                        <span class="setting-val" style="font-size:12px; text-align:right;">${log.other || 'なし'}</span>
+                    </div>
+                `;
+            } else {
+                gearHtml = `
+                    <div class="setting-item">
+                        <span>セイルサイズ</span>
+                        <span class="setting-val">${log.sail || '7.0'} ㎡</span>
+                    </div>
+                    <div class="setting-item">
+                        <span>マストベース位置</span>
+                        <span class="setting-val">${log.mast || '155'} mm</span>
+                    </div>
+                    <div class="setting-item">
+                        <span>スタビライザー</span>
+                        <span class="setting-val">${log.stabilizer || '140'}</span>
+                    </div>
+                    <div class="setting-item">
+                        <span>シム厚み</span>
+                        <span class="setting-val">${log.shim || '2.0'} mm</span>
+                    </div>
+                `;
+            }
+
+            // ラウンディング（レース練習）レポートの描画
+            let racesHtml = '';
+            if (log.races && log.races.length > 0) {
+                let listHtml = '';
+                log.races.forEach((race, index) => {
+                    listHtml += `
+                        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
+                                <span style="font-weight:700; color:var(--primary); font-size:13px;">Race ${index + 1}</span>
+                                <span style="background:rgba(16, 185, 129, 0.15); color:var(--accent); font-size:11px; padding:2px 8px; border-radius:6px; font-weight:700;">
+                                    結果: ${race.rank || '未記入'}
+                                </span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted);">
+                                <strong>スタート:</strong> ${race.start || '未記入'}
+                            </div>
+                            <div style="font-size:12px; line-height:1.5; color:#E2E8F0; white-space:pre-wrap;">
+                                ${race.memo || '（メモなし）'}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                racesHtml = `
+                    <div class="detail-section" style="grid-column: span 2; margin-top: 10px;">
+                        <h3 class="section-title" style="color: var(--accent); margin-bottom:12px;">
+                            <!-- Inline SVG for flag -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flag" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                            🏁 ラウンディング（レース練習）レポート
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+                            ${listHtml}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const detailContainer = document.getElementById('detail-panel');
+            detailContainer.innerHTML = `
+                <div class="detail-header">
+                    <div class="detail-meta-group">
+                        <h2 class="detail-title">${log.discipline || 'その他'}</h2>
+                        <div class="detail-date-loc">
+                            <span style="display:flex; align-items:center; gap:6px;">
+                                <!-- Inline SVG for calendar -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                ${log.date || ''}
+                            </span>
+                            <span style="display:flex; align-items:center; gap:6px;">
+                                <!-- Inline SVG for map-pin -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                ${log.location || ''}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="detail-actions">
+                        <button class="btn-delete" onclick="deleteLog('${log.id}')">
+                            <!-- Inline SVG for trash-2 -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                            削除
+                        </button>
+                    </div>
+                </div>
+
+                <div class="detail-grid">
+                    <!-- 左カラム: コンディションとギア設定 -->
+                    <div class="detail-grid-col" style="display:flex; flex-direction:column; gap:20px;">
+                        <div class="detail-section">
+                            <h3 class="section-title">
+                                <!-- Inline SVG for cloud-lightning -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-lightning"><path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 8.58"/><polyline points="13 11 9 17 12 17 9 23"/></svg>
+                                コンディション
+                            </h3>
+                            <div class="condition-pills">
+                                <div class="pill">
+                                    <!-- Inline SVG for wind -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wind"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+                                    風速: ${log.wind || 0} m/s
+                                </div>
+                                <div class="pill">
+                                    <!-- Inline SVG for compass -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                                    風向: ${log.windDir || '未入力'}
+                                </div>
+                                <div class="pill">
+                                    <!-- Inline SVG for activity -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                                    海面: ${log.sea || 'フラット海面'}
+                                </div>
+                                <div class="pill">
+                                    <!-- Inline SVG for sun -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                                    天気: ${log.weather || '晴れ'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <h3 class="section-title" style="color: ${isTechno ? 'var(--orange)' : 'var(--primary)'};">
+                                <!-- Inline SVG for sliders -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/></svg>
+                                ギアセッティング
+                            </h3>
+                            <div class="setting-list">
+                                ${gearHtml}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右カラム: 練習ログとAIアクション案 -->
+                    <div class="detail-grid-col" style="display:flex; flex-direction:column; gap:20px;">
+                        <div class="detail-section">
+                            <h3 class="section-title">
+                                <!-- Inline SVG for book-open -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                                練習ログ・気づき
+                            </h3>
+                            <div class="note-content">${log.feeling || '（記入なし）'}</div>
+                        </div>
+
+                        <div class="detail-section">
+                            <h3 class="section-title" style="color: var(--danger);">
+                                <!-- Inline SVG for alert-circle -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-circle"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                本日の課題
+                            </h3>
+                            <div class="note-content">${log.issue || ''}</div>
+                        </div>
+
+                        ${log.nextAction ? `
+                            <div class="ai-action-panel">
+                                <div class="ai-title">
+                                    <!-- Inline SVG for sparkles -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M12 3v16M19 12H5M12 3l4 4M12 19l-4-4M19 12l-4 4M5 12l4-4"/></svg>
+                                    AI ネクストアクション提案
+                                </div>
+                                <div class="ai-plan">
+                                    <strong>${log.nextAction.title}</strong>
+                                    <div>${log.nextAction.detail}</div>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- 下部全幅: ラウンディングレポート -->
+                    ${racesHtml}
+                </div>
+            `;
+        }
+
+        function renderEmptyDetail() {
+            document.getElementById('banner-action').style.display = 'none';
+            document.getElementById('detail-panel').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <!-- Inline SVG for book-open -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
+                    <div>
+                        <h3 style="color: white; margin-bottom: 8px;">ログが選択されていません</h3>
+                        <p style="font-size: 14px;">右上の「練習ノートを書く」から新しいログを作成してください。</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 保存ロジック（StorageHelperを使用）
+        function saveLog() {
+            const date = document.getElementById('form-date').value;
+            const location = document.getElementById('form-location').value;
+            const discipline = document.getElementById('form-discipline').value;
+            const wind = document.getElementById('form-wind').value;
+            const windDir = document.getElementById('form-wind-dir').value;
+            const sea = document.getElementById('form-sea').value;
+            const weather = document.getElementById('form-weather').value;
+            const sail = document.getElementById('form-sail').value;
+            const feeling = document.getElementById('form-feeling').value;
+            const issue = document.getElementById('form-issue').value;
+
+            if (!location || !issue) {
+                alert('練習場所と課題は必須項目です。');
+                return;
+            }
+
+            let newLog = {
+                id: 'log-' + Date.now(),
+                date,
+                location,
+                discipline,
+                wind,
+                windDir,
+                sea,
+                weather,
+                sail,
+                feeling,
+                issue
+            };
+
+            const raceBlocks = document.querySelectorAll('.form-race-block');
+            const races = [];
+            raceBlocks.forEach(block => {
+                races.push({
+                    rank: block.querySelector('.race-rank').value,
+                    start: block.querySelector('.race-start').value,
+                    memo: block.querySelector('.race-memo').value
+                });
+            });
+            newLog.races = races;
+
+            // 種目による分岐保存
+            if (discipline === 'テクノ293') {
+                newLog.ext = document.getElementById('form-techno-ext').value;
+                newLog.down = document.getElementById('form-techno-down').value;
+                newLog.pin = document.getElementById('form-techno-pin').value;
+                newLog.out = document.getElementById('form-techno-out').value;
+                
+                newLog.battens = [
+                    document.getElementById('form-techno-batten-1').value,
+                    document.getElementById('form-techno-batten-2').value,
+                    document.getElementById('form-techno-batten-3').value,
+                    document.getElementById('form-techno-batten-4').value,
+                    document.getElementById('form-techno-batten-5').value,
+                    document.getElementById('form-techno-batten-6').value
+                ];
+                
+                newLog.boom = document.getElementById('form-techno-boom').value;
+                newLog.other = document.getElementById('form-techno-other').value;
+                newLog.nextAction = generateTechnoNextAction(issue, wind);
+            } else {
+                newLog.mast = document.getElementById('form-foil-mast').value;
+                newLog.stabilizer = document.getElementById('form-foil-stabilizer').value;
+                newLog.shim = document.getElementById('form-foil-shim').value;
+                newLog.nextAction = generateFoilNextAction(issue, wind);
+            }
+
+            logs.push(newLog);
+            StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logs));
+            
+            closeModal();
+            loadLogs();
+            selectLog(newLog.id);
+        }
+
+        // テクノ293専用のアクション生成アルゴリズム
+        function generateTechnoNextAction(issue, wind) {
+            const text = issue.toLowerCase();
+            const w = parseInt(wind);
+
+            if (text.includes('上り') || text.includes('角度') || text.includes('クローズ') || text.includes('ダガー')) {
+                return {
+                    title: 'テクノ293：上り（クローズ）の横流れ防止 ＆ 角度アジャスト',
+                    detail: `テクノで上りの角度とスピードを向上させるための次回テストアクションです。
+                    <ul>
+                        <li><strong>【ダガーボードチェック】</strong>:
+                            <br>上りレグでダガーが「水面に対して垂直（限界）」まで下りているか確認する。しっかり踏み下ろすよう学生に指導します。
+                        </li>
+                        <li><strong>【ダウン・バテンの引き】</strong>:
+                            <br>強風での上りはダウンをしっかり引き、下側のバテン#5・#6のテンションを調整して、ドラフトを綺麗に前に固定させてボードの暴れを防ぎます。
+                        </li>
+                        <li><strong>【セーリングフォーム】</strong>: セイルを極限まで引き込み、ボードを完全にフラットに保つよう心掛けます。</li>
+                    </ul>`
+                };
+            }
+
+            if (text.includes('下り') || text.includes('ランニング') || text.includes('レグ') || text.includes('プレーニング') || text.includes('走らない')) {
+                return {
+                    title: 'テクノ293：下りレグでの最速プレーニング移行',
+                    detail: `下りで失速を防ぎ、早めにプレーニングさせるための指導アジャストです。
+                    <ul>
+                        <li><strong>【ダガーボードの完全収納】</strong>:
+                            <br>アビーム・ランニングに入った瞬間にダガーを完全に100%収納させます。
+                        </li>
+                        <li><strong>【アウト・ブームピン調整】</strong>:
+                            <br>1. アウトテンションを少し緩め（プラス側）にして、セイルの風を孕むパワーを増やします。
+                            <br>2. ブームのピン位置を後ろにずらす（長くする）ことで、セイルのアウトラインを綺麗に保ちます。
+                        </li>
+                        <li><strong>【アンダーパンピング】</strong>: ハーネスを外し、セイルを前後に引くのではなく、「斜め上から下に叩きつける（スクワット連動）」パンピングでフィンに水を噛ませてプレーニングに入ります。</li>
+                    </ul>`
+                };
+            }
+
+            if (text.includes('ジャイブ') || text.includes('沈') || text.includes('チン') || text.includes('転倒')) {
+                return {
+                    title: 'テクノ293：低重心フットステア・ジャイブの徹底',
+                    detail: `ジャイブでの沈を防ぎ、プレーニングを維持したまま回航するための課題アクションです。
+                    <ul>
+                        <li><strong>【足裏のレイルワーク】</strong>:
+                            <br>ジャイブ開始時に、内側の足の親指の付け根でレイルをじわじわと水面に押し込んで曲がります。
+                        </li>
+                        <li><strong>【セイル返しのタイミング】</strong>:
+                            <br>風下に向いた瞬間に、セイルを一瞬ニュートラルにし、ブームの手を素早く持ち替えてセイルを返します。
+                        </li>
+                    </ul>`
+                };
+            }
+
+            if (w < 6 || text.includes('パンピング') || text.includes('漕ぐ') || text.includes('微風') || text.includes('アンダー')) {
+                return {
+                    title: '微風時の「体重落とし込み型」パンピングフォーム',
+                    detail: `微風時にセイルを漕ぎ続け、失速を防ぐための技術アジャストです。
+                    <ul>
+                        <li><strong>【ブーム高さの設定】</strong>:
+                            <br>ブームを通常より「肩〜顎の高さ」まで高くセットします。テコの原理で腕力を使わずにパンピングできます。
+                        </li>
+                        <li><strong>【フォームの落とし込み】</strong>:
+                            <br>セイルを開く（腕を伸ばす）➔ ハーネスラインにぶら下がるように全体重をお尻から下に落とす、という重力連動のパンピングを指導します。
+                        </li>
+                    </ul>`
+                };
+            }
+
+            return {
+                title: 'テクノ293：コースタクティクス ＆ トリム最適化',
+                detail: `テクノ293の基本調整ループ案です。
+                <ul>
+                    <li><strong>1. 上りレグ</strong>: ダガー完全下ろし、セイルベタ引き、ボードフラット維持。バテンテンションのチェック。</li>
+                    <li><strong>2. 下りレグ</strong>: ダガー完全収納、アウトテンションの解放、フィンへの加重プレーニング、パンピング連動。</li>
+                </ul>`
+            };
+        }
+
+        // フォイル専用のアクション生成アルゴリズム
+        function generateFoilNextAction(issue, wind) {
+            const text = issue.toLowerCase();
+            const w = parseInt(wind);
+
+            if (text.includes('ジャイブ') || text.includes('jibe') || text.includes('刺さる') || text.includes('失速') || text.includes('沈')) {
+                return {
+                    title: 'フォイル：ジャイブ進入時のノーズキープ ＆ 荷重アジャスト',
+                    detail: `ジャイブ時の失速・刺さりを改善するために次回以下を検証します。
+                    <ul>
+                        <li><strong>A/Bテスト案</strong>:
+                            <br>【A】マストベースを5mm前に出して、ジャイブ進入時のボード前方への傾きを抑制。
+                            <br>【B】スタビライザーのシムを「0.25mm増やす」アジャストを行い、スピードが落ちた際の下向きリフト（ダウンフォース）を強化。
+                        </li>
+                        <li><strong>フォーム</strong>: ジャイブ進入時に姿勢を高く保ち、ハーネスに体重を残したままマストの垂直軸に乗り続けます。</li>
+                    </ul>`
+                };
+            }
+
+            if (text.includes('足') || text.includes('痛') || text.includes('プレッシャー') || text.includes('暴れる')) {
+                return {
+                    title: 'フォイル：ニュートラル垂直荷重へのアジャスト ＆ マスト前傾検証',
+                    detail: `足裏の痛みやオーバーパワーでの制御不能を改善するための次回アクションです。
+                    <ul>
+                        <li><strong>A/Bテスト案</strong>:
+                            <br>【A】マストベースを「5mm前」にして、フォイルの初期アタックアングルを抑え、足にかかる負担を減らす。
+                            <br>【B】強風用のスタビライザー（140等）に変更し、シムを増やすことでピッチのブレを安定させる。
+                        </li>
+                        <li><strong>フォーム</strong>: 足でボードをヒール側に突っ張る力を抜き、長いハーネスラインを使って腰の位置を外に出し、マストの真上に体重を垂直に落とす意識で乗ります。</li>
+                    </ul>`
+                };
+            }
+
+            if (text.includes('スピード') || text.includes('最高速') || text.includes('アビーム') || text.includes('抜け') || text.includes('伸び')) {
+                return {
+                    title: 'フォイル：ドラッグ（水流抵抗）最小化セッティング',
+                    detail: `アビーム巡航時の最高速とスピードの抜け感を向上させるアクション案です。
+                    <ul>
+                        <li><strong>A/Bテスト案</strong>:
+                            <br>【A】スタビライザーのシムアングルを最小限にし（シムを薄くする）、形状ドラッグを限界まで減らす。
+                            <br>【B】マストベースを少しだけ前に調整し、ボード全体のノーズの無駄な浮きを抑えて水平な低ドラッグ滑空を維持する。
+                        </li>
+                        <li><strong>メンテナンス</strong>: ウイング表面を極細ペーパー（#1000〜）でサンディングして平滑化します。</li>
+                    </ul>`
+                };
+            }
+
+            return {
+                title: 'フォイル：Fact ➔ Hypothesis のA/B検証プラン',
+                detail: `次回の練習で課題を克服するための「Fact-Hypothesis-Action」検証ループ案です。
+                <ul>
+                    <li><strong>ステップ1（Fact）</strong>: 発生した課題が「どの風域」「どのコース」で最も強く出たかを記録します。</li>
+                    <li><strong>ステップ2（Hypothesis）</strong>: 課題がリフト過多なら「マスト前 / シム薄」、リフト不足なら「マスト後 / シム厚()」という対照仮説を立てます。</li>
+                    <li><strong>ステップ3（Action）</strong>: 次回の練習開始時に、マスト位置かシムアングルを調整し、前後の走りの変化を比較します。</li>
+                </ul>`
+            };
+        }
+
+        // ログの削除
+        function deleteLog(id) {
+            if (confirm('この練習ノートを削除しますか？')) {
+                logs = logs.filter(l => l.id !== id);
+                StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logs));
+                loadLogs();
+            }
+        }
+    </script>
+</body>
+</html>
