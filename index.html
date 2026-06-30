@@ -23,6 +23,8 @@
             --card-glow: rgba(14, 165, 233, 0.15);
             --danger: #EF4444;
             --orange: #F97316;
+            --admin-purple: #8B5CF6;
+            --admin-gradient: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
         }
 
         * {
@@ -62,6 +64,12 @@
             padding: 40px 32px;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(16px);
+            transition: all 0.3s;
+        }
+
+        .login-card.admin-mode {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 20px 50px rgba(139, 92, 246, 0.15);
         }
 
         .login-header {
@@ -79,6 +87,12 @@
             justify-content: center;
             margin-bottom: 16px;
             box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+            transition: all 0.3s;
+        }
+
+        .login-card.admin-mode .login-logo-icon {
+            background: var(--admin-gradient);
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
         }
 
         .login-title {
@@ -123,6 +137,11 @@
             box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
         }
 
+        .login-card.admin-mode .login-tab.active {
+            background: var(--admin-gradient);
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
         .form-group {
             display: flex;
             flex-direction: column;
@@ -152,6 +171,11 @@
             box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
         }
 
+        .login-card.admin-mode .form-group input:focus {
+            border-color: var(--admin-purple);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
         .btn-auth {
             background: var(--primary-gradient);
             border: none;
@@ -169,6 +193,11 @@
         .btn-auth:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35);
+        }
+
+        .login-card.admin-mode .btn-auth {
+            background: var(--admin-gradient);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
         }
 
         /* ヘッダー */
@@ -257,84 +286,109 @@
             box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25);
         }
 
-        /* 管理者専用承認パネル */
-        .admin-approval-panel {
-            max-width: 1400px;
-            margin: 20px auto 0 auto;
+        /* 👑 独立した管理者ダッシュボード画面 */
+        .admin-dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
             padding: 0 24px;
         }
 
-        .admin-approval-card {
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0.03) 100%);
-            border: 1px solid rgba(249, 115, 22, 0.3);
-            border-radius: 16px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
+        .admin-dashboard-card {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
         }
 
-        .admin-panel-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--orange);
+        .admin-dashboard-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 24px;
+            margin-bottom: 24px;
         }
 
-        .admin-user-list {
+        .admin-dashboard-tabs {
             display: flex;
-            flex-wrap: wrap;
             gap: 12px;
-        }
-
-        .admin-user-row {
-            background: rgba(255, 255, 255, 0.03);
+            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
         }
 
-        .admin-user-name {
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .btn-approve {
-            background: var(--accent-gradient);
+        .admin-dashboard-tab {
+            background: none;
             border: none;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
+            color: var(--text-muted);
+            padding: 10px 20px;
+            font-size: 13px;
             font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
-            transition: all 0.2s;
-        }
-
-        .btn-approve:hover {
-            transform: translateY(-1px);
-        }
-
-        .btn-reject {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--danger);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .btn-reject:hover {
-            background: var(--danger);
+        .admin-dashboard-tab.active {
+            background: var(--admin-gradient);
             color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        /* 管理データテーブル */
+        .admin-table-wrapper {
+            overflow-x: auto;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .admin-table th {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 16px;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .admin-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-badge.approved {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent);
+        }
+
+        .status-badge.pending {
+            background: rgba(249, 115, 22, 0.15);
+            color: var(--orange);
         }
 
         /* ボトムナビゲーションバー */
@@ -740,18 +794,19 @@
 
     <!-- 🚪 【画面A】ログイン・アカウント作成画面 -->
     <div id="login-screen" class="login-container">
-        <div class="login-card">
+        <div class="login-card" id="login-card">
             <div class="login-header">
                 <div class="login-logo-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
                 </div>
-                <h2 class="login-title">GrowLog Windsurf</h2>
+                <h2 class="login-title" id="login-title-text">GrowLog Windsurf</h2>
                 <p class="login-subtitle">上達を加速させる練習ノート</p>
             </div>
 
             <div class="login-tabs">
                 <button id="tab-login" class="login-tab active" onclick="toggleLoginTab('login')">ログイン</button>
                 <button id="tab-signup" class="login-tab" onclick="toggleLoginTab('signup')">申請フォーム</button>
+                <button id="tab-admin" class="login-tab" onclick="toggleLoginTab('admin')">管理者</button>
             </div>
 
             <!-- ログインフォーム -->
@@ -777,7 +832,6 @@
                     <label for="signup-password">希望パスワード</label>
                     <input type="password" id="signup-password" placeholder="••••••••" required autocomplete="new-password">
                 </div>
-                <!-- 👑 管理者承認コード入力欄を追加 -->
                 <div class="form-group">
                     <label for="signup-admincode" style="color: var(--orange); font-weight:700;">管理者承認パスコード</label>
                     <input type="password" id="signup-admincode" placeholder="管理者から教えられたコード" required>
@@ -785,10 +839,23 @@
                 </div>
                 <button class="btn-auth" style="background: var(--accent-gradient); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);" onclick="handleSignup()">承認申請を送る</button>
             </div>
+
+            <!-- 👑 管理者ログイン専用フォーム -->
+            <div id="form-admin-box" style="display: none;">
+                <div class="form-group">
+                    <label for="admin-username" style="color: var(--admin-purple);">管理者ユーザーネーム</label>
+                    <input type="text" id="admin-username" value="sotakanagami" readonly style="background: rgba(255,255,255,0.01); color: var(--text-muted);">
+                </div>
+                <div class="form-group">
+                    <label for="admin-password" style="color: var(--admin-purple);">管理者パスワード</label>
+                    <input type="password" id="admin-password" placeholder="••••••••" required>
+                </div>
+                <button class="btn-auth" style="background: var(--admin-gradient);" onclick="handleAdminLogin()">管理者ポータルに入る</button>
+            </div>
         </div>
     </div>
 
-    <!-- ⛵️ 【画面B】メインアプリケーション画面 -->
+    <!-- ⛵️ 【画面B】メインアプリケーション画面 (一般用) -->
     <div id="app-screen" style="display: none;">
         <header>
             <div class="logo-area">
@@ -797,11 +864,15 @@
                 </div>
                 <div>
                     <span class="logo-text">GrowLog Windsurf</span>
-                    <span class="logo-tag">PROTOTYPE V4.5</span>
+                    <span class="logo-tag">PROTOTYPE V4.6</span>
                 </div>
             </div>
             
             <div class="header-actions">
+                <!-- 👑 管理者が一般モードで確認中に管理画面へ戻るボタン -->
+                <button id="btn-back-to-admin" class="btn-new-log" style="display: none; background: var(--admin-gradient); font-size:12px; padding: 6px 12px;" onclick="showAdminDashboard()">
+                    ⚙️ 管理画面に戻る
+                </button>
                 <div class="user-badge" id="current-user-badge">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     <span id="header-username">Guest</span>
@@ -816,19 +887,6 @@
                 </button>
             </div>
         </header>
-
-        <!-- 👑 管理者専用承認管理パネル (sotakanagamiにのみ表示) -->
-        <div id="admin-panel" class="admin-approval-panel" style="display: none;">
-            <div class="admin-approval-card">
-                <div class="admin-panel-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-alert"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <span>金上颯大 管理コンソール：承認待ちの申請アカウント</span>
-                </div>
-                <div class="admin-user-list" id="admin-pending-users">
-                    <!-- 動的挿入 -->
-                </div>
-            </div>
-        </div>
 
         <!-- カテゴリーフィルターバー -->
         <div class="category-filter-bar">
@@ -934,7 +992,94 @@
         </div>
     </div>
 
-    <!-- モーダル -->
+    <!-- 👑 【画面C】独立した管理者ダッシュボード画面 -->
+    <div id="admin-dashboard-screen" class="admin-dashboard-container" style="display: none;">
+        <div class="admin-dashboard-card">
+            <div class="admin-dashboard-header">
+                <div>
+                    <h2 style="font-size:20px; font-weight:800; color:var(--admin-purple); display:flex; align-items:center; gap:8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        <span>GrowLog Windsurf - 管理者ポータル</span>
+                    </h2>
+                    <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">全体のユーザー管理、練習ログの管理、システムパラメータの調整を行います。</p>
+                </div>
+                <div style="display:flex; gap:12px;">
+                    <button class="btn-new-log" style="background:var(--primary-gradient); font-size:12px;" onclick="enterGeneralUserMode()">
+                        👁 一般モード（動作確認）
+                    </button>
+                    <button class="btn-logout" onclick="handleLogout()">
+                        ログアウト
+                    </button>
+                </div>
+            </div>
+
+            <!-- 管理タブメニュー -->
+            <div class="admin-dashboard-tabs">
+                <button class="admin-dashboard-tab active" id="tab-adm-users" onclick="switchAdminTab('users')">👤 ユーザー承認・管理</button>
+                <button class="admin-dashboard-tab" id="tab-adm-logs" onclick="switchAdminTab('logs')">📝 練習ノート一覧管理</button>
+                <button class="admin-dashboard-tab" id="tab-adm-settings" onclick="switchAdminTab('settings')">⚙️ システム詳細設定</button>
+            </div>
+
+            <!-- A. ユーザー管理タブ -->
+            <div id="adm-content-users" class="admin-tab-content">
+                <h3 style="font-size:15px; margin-bottom:12px; color:var(--admin-purple);">👥 登録および申請ユーザー一覧</h3>
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ユーザーネーム</th>
+                                <th>ステータス</th>
+                                <th>アクション</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-tbody">
+                            <!-- JSで動的生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- B. 練習ノート管理タブ -->
+            <div id="adm-content-logs" class="admin-tab-content" style="display:none;">
+                <h3 style="font-size:15px; margin-bottom:12px; color:var(--admin-purple);">📝 全ユーザーの投稿ログ管理</h3>
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>投稿者</th>
+                                <th>日付</th>
+                                <th>練習場所</th>
+                                <th>種目</th>
+                                <th>風速</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-logs-tbody">
+                            <!-- JSで動的生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- C. システム設定タブ -->
+            <div id="adm-content-settings" class="admin-tab-content" style="display:none;">
+                <h3 style="font-size:15px; margin-bottom:16px; color:var(--admin-purple);">⚙️ セキュリティ設定</h3>
+                
+                <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); padding:24px; border-radius:16px; display:flex; flex-direction:column; gap:20px; max-width:600px;">
+                    <div class="form-group">
+                        <label for="input-admin-passcode" style="color:var(--orange);">新規登録用の「管理者承認パスコード」</label>
+                        <input type="text" id="input-admin-passcode" value="sotaapprove" style="font-size:16px; font-weight:700;">
+                        <span style="font-size:11px; color:var(--text-muted);">第三者がアカウント申請を行う際に入力を求めるパスコードです。ここで書き換えると、即座に新しいコードが要求されます。</span>
+                    </div>
+                    <button class="btn-auth" style="background:var(--accent-gradient); width:auto; align-self:flex-start; padding: 10px 24px;" onclick="saveSystemPasscode()">
+                        設定を保存する
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- モーダル (一般・管理者共用) -->
     <div class="modal" id="log-modal">
         <div class="modal-container">
             <div class="modal-header">
@@ -1166,9 +1311,7 @@
         const USERS_KEY = 'growlog_users_v4';
         const SESSION_KEY = 'growlog_current_user_v4';
         const STORAGE_KEY = 'growlog_records_v4_0';
-        
-        // 👑 セキュリティコード (申請に必須)
-        const SIGNUP_PASSCODE = 'sotaapprove';
+        const PASSCODE_KEY = 'growlog_admin_passcode_v4';
 
         let logs = [];
         let activeLogId = null;
@@ -1184,8 +1327,17 @@
         // ドキュメント初期化
         window.addEventListener('DOMContentLoaded', () => {
             initializeUsers();
+            initializePasscode();
             checkSession();
         });
+
+        // パスコード初期化
+        function initializePasscode() {
+            let code = StorageHelper.getItem(PASSCODE_KEY);
+            if (!code) {
+                StorageHelper.setItem(PASSCODE_KEY, 'sotaapprove');
+            }
+        }
 
         // ユーザーデータベースの初期化
         function initializeUsers() {
@@ -1194,7 +1346,8 @@
             if (data) {
                 try { users = JSON.parse(data); } catch (e) {}
             }
-            // sotakanagamiは管理者なので最初から status: "approved"
+            
+            // sotakanagamiは管理者
             const defaultUserExists = users.some(u => u.username === 'sotakanagami');
             if (!defaultUserExists) {
                 users.push({
@@ -1211,9 +1364,14 @@
             const session = StorageHelper.getItem(SESSION_KEY);
             if (session) {
                 currentUser = session;
-                showAppScreen();
-                loadLogs();
-                renderAdminPanel(); // 管理者用承認パネルを更新
+                
+                // 管理者がログイン中の場合は、自動的に管理者ダッシュボードを開く
+                if (currentUser === 'sotakanagami') {
+                    showAdminDashboard();
+                } else {
+                    showAppScreen();
+                    loadLogs();
+                }
             } else {
                 showLoginScreen();
             }
@@ -1223,42 +1381,90 @@
         function showLoginScreen() {
             document.getElementById('login-screen').style.display = 'flex';
             document.getElementById('app-screen').style.display = 'none';
+            document.getElementById('admin-dashboard-screen').style.display = 'none';
         }
 
         function showAppScreen() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-screen').style.display = 'block';
+            document.getElementById('admin-dashboard-screen').style.display = 'none';
             document.getElementById('header-username').innerText = currentUser;
+            
+            // 管理者が一般モードで確認している場合は「管理画面に戻る」ボタンをヘッダーに表示
+            const backBtn = document.getElementById('btn-back-to-admin');
+            if (currentUser === 'sotakanagami') {
+                backBtn.style.display = 'inline-flex';
+            } else {
+                backBtn.style.display = 'none';
+            }
+            
             switchTab('home');
         }
 
-        // タブ切り替え
+        // 👑 管理者ダッシュボードを表示
+        function showAdminDashboard() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'none';
+            document.getElementById('admin-dashboard-screen').style.display = 'block';
+            
+            // 管理ビューの初期表示
+            switchAdminTab('users');
+        }
+
+        // 一般ユーザー向け動作確認モード
+        function enterGeneralUserMode() {
+            showAppScreen();
+            loadLogs();
+        }
+
+        // タブ切り替え（ログイン / 新規申請 / 管理者）
         function toggleLoginTab(tab) {
             const tabLogin = document.getElementById('tab-login');
             const tabSignup = document.getElementById('tab-signup');
+            const tabAdmin = document.getElementById('tab-admin');
+            
             const boxLogin = document.getElementById('form-login-box');
             const boxSignup = document.getElementById('form-signup-box');
+            const boxAdmin = document.getElementById('form-admin-box');
+            
+            const card = document.getElementById('login-card');
+
+            // 一旦クリア
+            tabLogin.classList.remove('active');
+            tabSignup.classList.remove('active');
+            tabAdmin.classList.remove('active');
+            
+            boxLogin.style.display = 'none';
+            boxSignup.style.display = 'none';
+            boxAdmin.style.display = 'none';
+            card.classList.remove('admin-mode');
 
             if (tab === 'login') {
                 tabLogin.classList.add('active');
-                tabSignup.classList.remove('active');
                 boxLogin.style.display = 'block';
-                boxSignup.style.display = 'none';
-            } else {
-                tabLogin.classList.remove('active');
+            } else if (tab === 'signup') {
                 tabSignup.classList.add('active');
-                boxLogin.style.display = 'none';
                 boxSignup.style.display = 'block';
+            } else if (tab === 'admin') {
+                tabAdmin.classList.add('active');
+                boxAdmin.style.display = 'block';
+                card.classList.add('admin-mode'); // 管理者モード時は紫色のアクセントを付与
             }
         }
 
-        // ログイン処理 (承認ステータスチェックの追加)
+        // ログイン処理
         function handleLogin() {
             const userIn = document.getElementById('login-username').value.trim();
             const passIn = document.getElementById('login-password').value.trim();
 
             if (!userIn || !passIn) {
                 alert('ユーザーネームとパスワードを入力してください。');
+                return;
+            }
+
+            // 👑 安全対策：管理者のログインは「管理者」タブからのみ受け付ける
+            if (userIn === 'sotakanagami') {
+                alert('金上颯大としてのログインは、右側の「管理者」タブから行ってください。');
                 return;
             }
 
@@ -1270,7 +1476,6 @@
 
             const user = users.find(u => u.username === userIn && u.password === passIn);
             if (user) {
-                // 👑 承認ステータスチェック
                 if (user.status !== 'approved') {
                     alert('申請中のアカウントです。ログインするには管理者（金上颯大）の承認が必要です。');
                     return;
@@ -1280,13 +1485,39 @@
                 StorageHelper.setItem(SESSION_KEY, currentUser);
                 showAppScreen();
                 loadLogs();
-                renderAdminPanel();
             } else {
                 alert('ユーザー名またはパスワードが正しくありません。');
             }
         }
 
-        // 新規アカウント申請送信 (承認制)
+        // 👑 管理者ログイン処理
+        function handleAdminLogin() {
+            const passIn = document.getElementById('admin-password').value.trim();
+
+            if (!passIn) {
+                alert('管理者パスワードを入力してください。');
+                return;
+            }
+
+            const data = StorageHelper.getItem(USERS_KEY);
+            let users = [];
+            if (data) {
+                try { users = JSON.parse(data); } catch(e) {}
+            }
+
+            // sotakanagami（管理者）の情報を検証
+            const adminUser = users.find(u => u.username === 'sotakanagami' && u.password === passIn);
+            if (adminUser) {
+                currentUser = 'sotakanagami';
+                StorageHelper.setItem(SESSION_KEY, currentUser);
+                document.getElementById('admin-password').value = '';
+                showAdminDashboard();
+            } else {
+                alert('管理者パスワードが正しくありません。');
+            }
+        }
+
+        // 新規アカウント申請送信
         function handleSignup() {
             const userIn = document.getElementById('signup-username').value.trim();
             const passIn = document.getElementById('signup-password').value.trim();
@@ -1297,8 +1528,9 @@
                 return;
             }
 
-            // 👑 セキュリティコードの確認
-            if (codeIn !== SIGNUP_PASSCODE) {
+            // 👑 動的に保存されているパスコードを読み込んで検証
+            const correctPasscode = StorageHelper.getItem(PASSCODE_KEY) || 'sotaapprove';
+            if (codeIn !== correctPasscode) {
                 alert('正しい「管理者承認パスコード」を入力してください。');
                 return;
             }
@@ -1314,7 +1546,6 @@
                 return;
             }
 
-            // 👑 status: "pending" (承認待ち) でアカウントを作成
             users.push({
                 username: userIn,
                 password: passIn,
@@ -1337,16 +1568,35 @@
             showLoginScreen();
         }
 
-        // 👑 管理者専用：承認管理パネルのレンダリング
-        function renderAdminPanel() {
-            const panel = document.getElementById('admin-panel');
-            const container = document.getElementById('admin-pending-users');
+        // 👑 管理者タブ切り替え
+        function switchAdminTab(tab) {
+            document.getElementById('adm-content-users').style.display = 'none';
+            document.getElementById('adm-content-logs').style.display = 'none';
+            document.getElementById('adm-content-settings').style.display = 'none';
             
-            // ログインしているのが sotakanagami（管理者）ではない場合は非表示
-            if (currentUser !== 'sotakanagami') {
-                panel.style.display = 'none';
-                return;
+            document.getElementById('tab-adm-users').classList.remove('active');
+            document.getElementById('tab-adm-logs').classList.remove('active');
+            document.getElementById('tab-adm-settings').classList.remove('active');
+
+            if (tab === 'users') {
+                document.getElementById('adm-content-users').style.display = 'block';
+                document.getElementById('tab-adm-users').classList.add('active');
+                renderAdminUsers();
+            } else if (tab === 'logs') {
+                document.getElementById('adm-content-logs').style.display = 'block';
+                document.getElementById('tab-adm-logs').classList.add('active');
+                renderAdminLogs();
+            } else if (tab === 'settings') {
+                document.getElementById('adm-content-settings').style.display = 'block';
+                document.getElementById('tab-adm-settings').classList.add('active');
+                renderAdminSettings();
             }
+        }
+
+        // 👑 管理者画面：ユーザーリストの表示
+        function renderAdminUsers() {
+            const tbody = document.getElementById('admin-users-tbody');
+            tbody.innerHTML = '';
 
             const data = StorageHelper.getItem(USERS_KEY);
             let users = [];
@@ -1354,33 +1604,100 @@
                 try { users = JSON.parse(data); } catch(e) {}
             }
 
-            // 承認待ちのユーザーを抽出
-            const pendingUsers = users.filter(u => u.status === 'pending');
-
-            if (pendingUsers.length === 0) {
-                panel.style.display = 'none';
+            if (users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">登録ユーザーはいません。</td></tr>`;
                 return;
             }
 
-            panel.style.display = 'block';
-            container.innerHTML = '';
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                
+                const isPending = user.status === 'pending';
+                const isAdmin = user.username === 'sotakanagami';
+                
+                let statusHtml = '';
+                if (isAdmin) {
+                    statusHtml = `<span class="status-badge approved" style="background:rgba(139, 92, 246, 0.15); color:var(--admin-purple);">管理者</span>`;
+                } else if (isPending) {
+                    statusHtml = `<span class="status-badge pending">承認待ち (Pending)</span>`;
+                } else {
+                    statusHtml = `<span class="status-badge approved">承認済み (Approved)</span>`;
+                }
 
-            pendingUsers.forEach(user => {
-                const userRow = document.createElement('div');
-                userRow.className = 'admin-user-row';
-                userRow.innerHTML = `
-                    <span class="admin-user-name">@${user.username}</span>
-                    <div style="display:flex; gap:8px;">
-                        <button class="btn-approve" onclick="approveUser('${user.username}')">承認する</button>
-                        <button class="btn-reject" onclick="rejectUser('${user.username}')">拒否</button>
-                    </div>
+                let actionsHtml = '';
+                if (isAdmin) {
+                    actionsHtml = `<span style="color:var(--text-dark);">操作不可</span>`;
+                } else {
+                    actionsHtml = `
+                        <div style="display:flex; gap:8px;">
+                            ${isPending ? `<button class="btn-approve" onclick="adminApproveUser('${user.username}')">承認する</button>` : ''}
+                            <button class="btn-reject" onclick="adminDeleteUser('${user.username}')">削除</button>
+                        </div>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td style="font-weight:700;">@${user.username}</td>
+                    <td>${statusHtml}</td>
+                    <td>${actionsHtml}</td>
                 `;
-                container.appendChild(userRow);
+                tbody.appendChild(tr);
             });
         }
 
-        // 👑 アカウントを承認する処理
-        function approveUser(username) {
+        // 👑 管理者画面：全投稿ノートリストの表示
+        function renderAdminLogs() {
+            const tbody = document.getElementById('admin-logs-tbody');
+            tbody.innerHTML = '';
+
+            const data = StorageHelper.getItem(STORAGE_KEY);
+            let allLogs = [];
+            if (data) {
+                try { allLogs = JSON.parse(data); } catch(e) {}
+            }
+
+            if (allLogs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">練習ノートの投稿はありません。</td></tr>`;
+                return;
+            }
+
+            allLogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            allLogs.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:700;">@${log.username || 'unknown'}</td>
+                    <td>${log.date}</td>
+                    <td>${log.location}</td>
+                    <td><span class="log-item-tag ${log.discipline === 'テクノ293' ? 'tag-techno' : 'tag-foil'}">${log.discipline}</span></td>
+                    <td>${log.wind} m/s</td>
+                    <td>
+                        <button class="btn-reject" style="padding:4px 8px;" onclick="adminDeleteLog('${log.id}', '@${log.username}')">強制削除</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 👑 管理者画面：システムセッティングの表示
+        function renderAdminSettings() {
+            const passcode = StorageHelper.getItem(PASSCODE_KEY) || 'sotaapprove';
+            document.getElementById('input-admin-passcode').value = passcode;
+        }
+
+        // 👑 システムパスコードの保存
+        function saveSystemPasscode() {
+            const val = document.getElementById('input-admin-passcode').value.trim();
+            if (!val) {
+                alert('パスコードを空にすることはできません。');
+                return;
+            }
+            StorageHelper.setItem(PASSCODE_KEY, val);
+            alert(`新規登録用の承認パスコードを「${val}」に変更しました。`);
+        }
+
+        // 👑 ユーザー承認
+        function adminApproveUser(username) {
             const data = StorageHelper.getItem(USERS_KEY);
             let users = [];
             if (data) {
@@ -1391,23 +1708,49 @@
             if (user) {
                 user.status = 'approved';
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
-                alert(`@${username} のアカウントを承認しました。ログイン可能になりました。`);
-                renderAdminPanel();
+                alert(`@${username} のアカウントを承認しました。`);
+                renderAdminUsers();
             }
         }
 
-        // 👑 アカウント申請を拒否（削除）する処理
-        function rejectUser(username) {
-            if (confirm(`@${username} のアカウント申請を拒否して削除しますか？`)) {
-                const data = StorageHelper.getItem(USERS_KEY);
+        // 👑 ユーザー削除
+        function adminDeleteUser(username) {
+            if (confirm(`@${username} を削除しますか？\nこの操作は取り消せません。該当ユーザーの練習データも同時に削除されます。`)) {
+                // 1. ユーザー削除
+                const uData = StorageHelper.getItem(USERS_KEY);
                 let users = [];
-                if (data) {
-                    try { users = JSON.parse(data); } catch(e) {}
+                if (uData) {
+                    try { users = JSON.parse(uData); } catch(e) {}
                 }
-
                 users = users.filter(u => u.username !== username);
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
-                renderAdminPanel();
+
+                // 2. 関連する練習ログも削除
+                const lData = StorageHelper.getItem(STORAGE_KEY);
+                let logsAll = [];
+                if (lData) {
+                    try { logsAll = JSON.parse(lData); } catch(e) {}
+                }
+                logsAll = logsAll.filter(l => l.username !== username);
+                StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logsAll));
+
+                alert(`@${username} のアカウントと練習ノートをすべて削除しました。`);
+                renderAdminUsers();
+            }
+        }
+
+        // 👑 投稿の強制削除
+        function adminDeleteLog(id, author) {
+            if (confirm(`${author} の練習ノートを削除しますか？\nこの操作は取り消せません。`)) {
+                const data = StorageHelper.getItem(STORAGE_KEY);
+                let allLogs = [];
+                if (data) {
+                    try { allLogs = JSON.parse(data); } catch(e) {}
+                }
+                allLogs = allLogs.filter(l => l.id !== id);
+                StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
+                alert('練習ノートを削除しました。');
+                renderAdminLogs();
             }
         }
 
@@ -1469,12 +1812,12 @@
             }
         }
 
-        // 風速スライダー表示更新
+        // 風速表示
         function updateWindValue(val) {
             document.getElementById('wind-val-display').innerText = val + ' m';
         }
 
-        // モーダル開閉
+        // モーダル
         function openModal() {
             isEditing = false;
             editingLogId = null;
@@ -2083,7 +2426,7 @@
             switchTab(currentTab);
         }
 
-        // フィード描画 ＆ カテゴリー絞り込み (statusがapprovedのユーザーの投稿のみ表示する安全策)
+        // フィード描画
         function renderFeed() {
             const feedContainer = document.getElementById('feed-container');
             feedContainer.innerHTML = '';
@@ -2094,9 +2437,8 @@
                 try { allLogs = JSON.parse(data); } catch(e) {}
             }
 
-            // 👑 承認済みのユーザー名リストを取得
             const usersData = StorageHelper.getItem(USERS_KEY);
-            let approvedUsers = ['sotakanagami']; // sotakanagamiは常に承認済み
+            let approvedUsers = ['sotakanagami']; 
             if (usersData) {
                 try {
                     const parsedUsers = JSON.parse(usersData);
@@ -2104,7 +2446,6 @@
                 } catch(e) {}
             }
 
-            // 承認済みユーザーかつ、グローバルカテゴリーフィルターに合致するログ
             let displayLogs = allLogs.filter(log => {
                 const isApproved = approvedUsers.includes(log.username);
                 if (!isApproved) return false;
@@ -2214,7 +2555,6 @@
                 try { allLogs = JSON.parse(data); } catch(e) {}
             }
 
-            // 👑 承認済みユーザーのみ表示
             const usersData = StorageHelper.getItem(USERS_KEY);
             let approvedUsers = ['sotakanagami'];
             if (usersData) {
@@ -2417,7 +2757,7 @@
                         <li><strong>【レイルステア（足裏ワーク）】</strong>:
                             <br>ジャイブ進入時、内側の足の親指の付け根（レイル上）に重心を深く落とし込み、ボードのレイル全体を水に噛ませてターンを描きます。急激な踏み込みによる水流剥離（失速）を防ぐため、スムーズな重心移動を行います。
                         </li>
-                        <li><strong>【ジャイブ中のマストトラッカー操作】</strong>:
+                        <li><strong>【ジャブ中のマストトラッカー操作】</strong>:
                             <br>ターン後半（セイル返し直前）に、足元のペダル操作でマストトラッカーを<strong>「中 (Middle)」または「前 (Forward)」</strong>に戻す準備をします。立ち上がり後にスムーズに上り角度をキープするための一連の流れを動作パターン化します。
                         </li>
                         <li><strong>【セイル反転時のトリムバランス】</strong>: 風下に向いた瞬間、セイルの風圧が一瞬ニュートラルになるため、すかさずブームを持つ手を前に滑らせて低重心のまま反転させ、ブローを膝で吸収します。</li>
@@ -2431,7 +2771,7 @@
                 <ul>
                     <li><strong>1. クローズホールド（上り）</strong>: 
                         <br>・微風時：トラッカー「前」、レイルは山側へヒール、セイル緩め。
-                        <br>·強風時：トラッカー「前〜中」、ボードは完全フラット、ダウンベタ引き、バテン下部強め。
+                        <br>・強風時：トラッカー「前〜中」、ボードは完全フラット、ダウンベタ引き、バテン下部強め。
                     </li>
                     <li><strong>2. ダウンウインド（下り）</strong>: 
                         <br>・共通：トラッカー「後」、ダガー完全収納。
