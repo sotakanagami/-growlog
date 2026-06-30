@@ -286,7 +286,7 @@
             box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25);
         }
 
-        /* 👑 独立した管理者ダッシュボード画面 */
+        /* 管理者専用ダッシュボード画面 */
         .admin-dashboard-container {
             max-width: 1200px;
             margin: 40px auto;
@@ -840,7 +840,7 @@
                 <button class="btn-auth" style="background: var(--accent-gradient); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);" onclick="handleSignup()">承認申請を送る</button>
             </div>
 
-            <!-- 👑 管理者ログイン専用フォーム -->
+            <!-- 管理者ログイン専用フォーム -->
             <div id="form-admin-box" style="display: none;">
                 <div class="form-group">
                     <label for="admin-username" style="color: var(--admin-purple);">管理者ユーザーネーム</label>
@@ -864,12 +864,12 @@
                 </div>
                 <div>
                     <span class="logo-text">GrowLog Windsurf</span>
-                    <span class="logo-tag">PROTOTYPE V4.6</span>
+                    <span class="logo-tag">PROTOTYPE V4.7</span>
                 </div>
             </div>
             
             <div class="header-actions">
-                <!-- 👑 管理者が一般モードで確認中に管理画面へ戻るボタン -->
+                <!-- 管理者が一般モードで確認中に管理画面へ戻るボタン -->
                 <button id="btn-back-to-admin" class="btn-new-log" style="display: none; background: var(--admin-gradient); font-size:12px; padding: 6px 12px;" onclick="showAdminDashboard()">
                     ⚙️ 管理画面に戻る
                 </button>
@@ -970,7 +970,7 @@
                     <button class="search-tag-btn" onclick="filterSearchTag('微風', this)">微風 (5m-)</button>
                 </div>
                 <div class="feed-container" id="search-results-container" style="margin-top: 12px;">
-                    <!-- 各自のログ一覧 -->
+                    <!-- 動的挿入 -->
                 </div>
             </div>
         </div>
@@ -1033,7 +1033,7 @@
                             </tr>
                         </thead>
                         <tbody id="admin-users-tbody">
-                            <!-- JSで動的生成 -->
+                            <!-- 動的生成 -->
                         </tbody>
                     </table>
                 </div>
@@ -1055,7 +1055,7 @@
                             </tr>
                         </thead>
                         <tbody id="admin-logs-tbody">
-                            <!-- JSで動的生成 -->
+                            <!-- 動的生成 -->
                         </tbody>
                     </table>
                 </div>
@@ -1079,7 +1079,7 @@
         </div>
     </div>
 
-    <!-- モーダル (一般・管理者共用) -->
+    <!-- モーダル -->
     <div class="modal" id="log-modal">
         <div class="modal-container">
             <div class="modal-header">
@@ -1339,7 +1339,7 @@
             }
         }
 
-        // ユーザーデータベースの初期化
+        // 👑 ユーザーデータベースの初期化（sotakanagamiアカウントの承認ステータス・パスワード強制上書き保証）
         function initializeUsers() {
             let users = [];
             const data = StorageHelper.getItem(USERS_KEY);
@@ -1347,16 +1347,21 @@
                 try { users = JSON.parse(data); } catch (e) {}
             }
             
-            // sotakanagamiは管理者
-            const defaultUserExists = users.some(u => u.username === 'sotakanagami');
-            if (!defaultUserExists) {
-                users.push({
+            // sotakanagamiアカウントを取得、または作成
+            let adminUser = users.find(u => u.username === 'sotakanagami');
+            if (!adminUser) {
+                adminUser = {
                     username: 'sotakanagami',
                     password: 'sota0016',
                     status: 'approved'
-                });
-                StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
+                };
+                users.push(adminUser);
+            } else {
+                // すでに存在している場合でも、強制的にステータスを approved に、パスワードを sota0016 に上書き保証する
+                adminUser.status = 'approved';
+                adminUser.password = 'sota0016';
             }
+            StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
         }
 
         // セッションチェック
@@ -1365,7 +1370,6 @@
             if (session) {
                 currentUser = session;
                 
-                // 管理者がログイン中の場合は、自動的に管理者ダッシュボードを開く
                 if (currentUser === 'sotakanagami') {
                     showAdminDashboard();
                 } else {
@@ -1390,7 +1394,6 @@
             document.getElementById('admin-dashboard-screen').style.display = 'none';
             document.getElementById('header-username').innerText = currentUser;
             
-            // 管理者が一般モードで確認している場合は「管理画面に戻る」ボタンをヘッダーに表示
             const backBtn = document.getElementById('btn-back-to-admin');
             if (currentUser === 'sotakanagami') {
                 backBtn.style.display = 'inline-flex';
@@ -1401,13 +1404,11 @@
             switchTab('home');
         }
 
-        // 👑 管理者ダッシュボードを表示
+        // 管理者ダッシュボードを表示
         function showAdminDashboard() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-screen').style.display = 'none';
             document.getElementById('admin-dashboard-screen').style.display = 'block';
-            
-            // 管理ビューの初期表示
             switchAdminTab('users');
         }
 
@@ -1429,7 +1430,6 @@
             
             const card = document.getElementById('login-card');
 
-            // 一旦クリア
             tabLogin.classList.remove('active');
             tabSignup.classList.remove('active');
             tabAdmin.classList.remove('active');
@@ -1448,11 +1448,11 @@
             } else if (tab === 'admin') {
                 tabAdmin.classList.add('active');
                 boxAdmin.style.display = 'block';
-                card.classList.add('admin-mode'); // 管理者モード時は紫色のアクセントを付与
+                card.classList.add('admin-mode');
             }
         }
 
-        // ログイン処理
+        // 一般ログイン処理
         function handleLogin() {
             const userIn = document.getElementById('login-username').value.trim();
             const passIn = document.getElementById('login-password').value.trim();
@@ -1462,7 +1462,6 @@
                 return;
             }
 
-            // 👑 安全対策：管理者のログインは「管理者」タブからのみ受け付ける
             if (userIn === 'sotakanagami') {
                 alert('金上颯大としてのログインは、右側の「管理者」タブから行ってください。');
                 return;
@@ -1490,7 +1489,7 @@
             }
         }
 
-        // 👑 管理者ログイン処理
+        // 👑 管理者ログイン処理 (無条件で自己修復・上書き処理を実行)
         function handleAdminLogin() {
             const passIn = document.getElementById('admin-password').value.trim();
 
@@ -1499,17 +1498,31 @@
                 return;
             }
 
-            const data = StorageHelper.getItem(USERS_KEY);
-            let users = [];
-            if (data) {
-                try { users = JSON.parse(data); } catch(e) {}
-            }
-
-            // sotakanagami（管理者）の情報を検証
-            const adminUser = users.find(u => u.username === 'sotakanagami' && u.password === passIn);
-            if (adminUser) {
+            // パスワードが「sota0016」の場合、ローカルの状態に関わらず無条件でログインを強制成功させ、自己修復する
+            if (passIn === 'sota0016') {
                 currentUser = 'sotakanagami';
                 StorageHelper.setItem(SESSION_KEY, currentUser);
+                
+                // データベース(Local Storage)上の sotakanagami のステータスを強制的に approved に修復
+                const data = StorageHelper.getItem(USERS_KEY);
+                let users = [];
+                if (data) {
+                    try { users = JSON.parse(data); } catch(e) {}
+                }
+                
+                let adminUser = users.find(u => u.username === 'sotakanagami');
+                if (adminUser) {
+                    adminUser.status = 'approved';
+                    adminUser.password = 'sota0016';
+                } else {
+                    users.push({
+                        username: 'sotakanagami',
+                        password: 'sota0016',
+                        status: 'approved'
+                    });
+                }
+                StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
+
                 document.getElementById('admin-password').value = '';
                 showAdminDashboard();
             } else {
@@ -1528,7 +1541,6 @@
                 return;
             }
 
-            // 👑 動的に保存されているパスコードを読み込んで検証
             const correctPasscode = StorageHelper.getItem(PASSCODE_KEY) || 'sotaapprove';
             if (codeIn !== correctPasscode) {
                 alert('正しい「管理者承認パスコード」を入力してください。');
@@ -1568,7 +1580,7 @@
             showLoginScreen();
         }
 
-        // 👑 管理者タブ切り替え
+        // 管理者タブ切り替え
         function switchAdminTab(tab) {
             document.getElementById('adm-content-users').style.display = 'none';
             document.getElementById('adm-content-logs').style.display = 'none';
@@ -1593,7 +1605,7 @@
             }
         }
 
-        // 👑 管理者画面：ユーザーリストの表示
+        // 管理者画面：ユーザーリストの表示
         function renderAdminUsers() {
             const tbody = document.getElementById('admin-users-tbody');
             tbody.innerHTML = '';
@@ -1645,7 +1657,7 @@
             });
         }
 
-        // 👑 管理者画面：全投稿ノートリストの表示
+        // 管理者画面：全投稿ノートリストの表示
         function renderAdminLogs() {
             const tbody = document.getElementById('admin-logs-tbody');
             tbody.innerHTML = '';
@@ -1679,13 +1691,13 @@
             });
         }
 
-        // 👑 管理者画面：システムセッティングの表示
+        // 管理者画面：システムセッティングの表示
         function renderAdminSettings() {
             const passcode = StorageHelper.getItem(PASSCODE_KEY) || 'sotaapprove';
             document.getElementById('input-admin-passcode').value = passcode;
         }
 
-        // 👑 システムパスコードの保存
+        // システムパスコードの保存
         function saveSystemPasscode() {
             const val = document.getElementById('input-admin-passcode').value.trim();
             if (!val) {
@@ -1696,7 +1708,7 @@
             alert(`新規登録用の承認パスコードを「${val}」に変更しました。`);
         }
 
-        // 👑 ユーザー承認
+        // ユーザー承認
         function adminApproveUser(username) {
             const data = StorageHelper.getItem(USERS_KEY);
             let users = [];
@@ -1713,10 +1725,9 @@
             }
         }
 
-        // 👑 ユーザー削除
+        // ユーザー削除
         function adminDeleteUser(username) {
             if (confirm(`@${username} を削除しますか？\nこの操作は取り消せません。該当ユーザーの練習データも同時に削除されます。`)) {
-                // 1. ユーザー削除
                 const uData = StorageHelper.getItem(USERS_KEY);
                 let users = [];
                 if (uData) {
@@ -1725,7 +1736,6 @@
                 users = users.filter(u => u.username !== username);
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
 
-                // 2. 関連する練習ログも削除
                 const lData = StorageHelper.getItem(STORAGE_KEY);
                 let logsAll = [];
                 if (lData) {
@@ -1739,7 +1749,7 @@
             }
         }
 
-        // 👑 投稿の強制削除
+        // 投稿の強制削除
         function adminDeleteLog(id, author) {
             if (confirm(`${author} の練習ノートを削除しますか？\nこの操作は取り消せません。`)) {
                 const data = StorageHelper.getItem(STORAGE_KEY);
@@ -1929,7 +1939,7 @@
                     </div>
                     <div class="form-group">
                         <label>スタート状況</label>
-                        <input type="text" class="race-start" placeholder="例: ジャスト、下1からなど" value="${data.start}">
+                        <input type="text" class="race-start" placeholder="例: 3位 / 15艇中など" value="${data.start}">
                     </div>
                 </div>
                 <div class="form-group">
@@ -2203,7 +2213,7 @@
                     <div class="detail-section" style="grid-column: span 2; margin-top: 10px;">
                         <h3 class="section-title" style="color: var(--accent); margin-bottom:12px;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flag" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-                            🏁 ラウンディング（レース練習）レポート
+                            🏁 ターン・回航レポート
                         </h3>
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
                             ${listHtml}
@@ -2807,7 +2817,7 @@
                     <ul>
                         <li><strong>A/Bテスト案</strong>:
                             <br>【A】マストベースを「5mm前」にして、フォイルの初期アタックアングルを抑え、足にかかる負担を減らす.
-                            <br>【B】強風用のスタビライザー（140等）に変更し、シムを増やすことでピッチのブレを安定させる.
+                            <br>【B】強風用のスタビライザー（140等）に変更し、シムを増やすことでピッチ of ブレを安定させる.
                         </li>
                         <li><strong>フォーム</strong>: 足でボードをヒール側に突っ張る力を抜き、長いハーネスラインを使って腰の位置を外に出し、マストの真上に体重を垂直に落とし込む意識で乗ります.</li>
                     </ul>`
