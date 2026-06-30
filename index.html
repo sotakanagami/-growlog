@@ -139,6 +139,7 @@
 
         .login-card.admin-mode .login-tab.active {
             background: var(--admin-gradient);
+            color: white;
             box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
         }
 
@@ -198,6 +199,35 @@
         .login-card.admin-mode .btn-auth {
             background: var(--admin-gradient);
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+        }
+
+        /* 👑 コモンボタン: btn-new-log (青い背景に白い文字を保証) */
+        .btn-new-log {
+            background: var(--primary-gradient);
+            border: none;
+            color: white !important;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-new-log:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
+            color: white !important;
+        }
+
+        .btn-new-log svg {
+            stroke: white !important;
         }
 
         /* ヘッダー */
@@ -864,12 +894,12 @@
                 </div>
                 <div>
                     <span class="logo-text">GrowLog Windsurf</span>
-                    <span class="logo-tag">PROTOTYPE V4.7</span>
+                    <span class="logo-tag">PROTOTYPE V4.8</span>
                 </div>
             </div>
             
             <div class="header-actions">
-                <!-- 管理者が一般モードで確認中に管理画面へ戻るボタン -->
+                <!-- 管理者が一般モードで確認中に管理画面へ戻るボタン (btn-new-logで白文字に保証) -->
                 <button id="btn-back-to-admin" class="btn-new-log" style="display: none; background: var(--admin-gradient); font-size:12px; padding: 6px 12px;" onclick="showAdminDashboard()">
                     ⚙️ 管理画面に戻る
                 </button>
@@ -1004,7 +1034,8 @@
                     <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">全体のユーザー管理、練習ログの管理、システムパラメータの調整を行います。</p>
                 </div>
                 <div style="display:flex; gap:12px;">
-                    <button class="btn-new-log" style="background:var(--primary-gradient); font-size:12px;" onclick="enterGeneralUserMode()">
+                    <!-- 一般モードボタン (btn-new-logで文字を完全に白に固定) -->
+                    <button class="btn-new-log" onclick="enterGeneralUserMode()">
                         👁 一般モード（動作確認）
                     </button>
                     <button class="btn-logout" onclick="handleLogout()">
@@ -1033,7 +1064,7 @@
                             </tr>
                         </thead>
                         <tbody id="admin-users-tbody">
-                            <!-- 動的生成 -->
+                            <!-- JSで動的生成 -->
                         </tbody>
                     </table>
                 </div>
@@ -1055,7 +1086,7 @@
                             </tr>
                         </thead>
                         <tbody id="admin-logs-tbody">
-                            <!-- 動的生成 -->
+                            <!-- JSで動的生成 -->
                         </tbody>
                     </table>
                 </div>
@@ -1339,7 +1370,7 @@
             }
         }
 
-        // 👑 ユーザーデータベースの初期化（sotakanagamiアカウントの承認ステータス・パスワード強制上書き保証）
+        // ユーザーデータベースの初期化
         function initializeUsers() {
             let users = [];
             const data = StorageHelper.getItem(USERS_KEY);
@@ -1347,7 +1378,6 @@
                 try { users = JSON.parse(data); } catch (e) {}
             }
             
-            // sotakanagamiアカウントを取得、または作成
             let adminUser = users.find(u => u.username === 'sotakanagami');
             if (!adminUser) {
                 adminUser = {
@@ -1357,7 +1387,6 @@
                 };
                 users.push(adminUser);
             } else {
-                // すでに存在している場合でも、強制的にステータスを approved に、パスワードを sota0016 に上書き保証する
                 adminUser.status = 'approved';
                 adminUser.password = 'sota0016';
             }
@@ -1418,7 +1447,7 @@
             loadLogs();
         }
 
-        // タブ切り替え（ログイン / 新規申請 / 管理者）
+        // タブ切り替え
         function toggleLoginTab(tab) {
             const tabLogin = document.getElementById('tab-login');
             const tabSignup = document.getElementById('tab-signup');
@@ -1489,7 +1518,7 @@
             }
         }
 
-        // 👑 管理者ログイン処理 (無条件で自己修復・上書き処理を実行)
+        // 管理者ログイン処理 
         function handleAdminLogin() {
             const passIn = document.getElementById('admin-password').value.trim();
 
@@ -1498,12 +1527,10 @@
                 return;
             }
 
-            // パスワードが「sota0016」の場合、ローカルの状態に関わらず無条件でログインを強制成功させ、自己修復する
             if (passIn === 'sota0016') {
                 currentUser = 'sotakanagami';
                 StorageHelper.setItem(SESSION_KEY, currentUser);
                 
-                // データベース(Local Storage)上の sotakanagami のステータスを強制的に approved に修復
                 const data = StorageHelper.getItem(USERS_KEY);
                 let users = [];
                 if (data) {
@@ -2247,7 +2274,8 @@
                         </div>
                     </div>
                     <div class="detail-actions">
-                        <button class="btn-new-log" style="padding: 8px 16px; background: var(--primary-gradient); box-shadow: none; font-size:13px;" onclick="editLog('${log.id}')">
+                        <!-- 👑 編集ボタン (btn-new-logで文字を白に固定) -->
+                        <button class="btn-new-log" style="padding: 8px 16px; box-shadow: none;" onclick="editLog('${log.id}')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-edit-2" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
                             編集
                         </button>
@@ -2542,11 +2570,13 @@
             filterSearchList();
         }
 
+        // 検索クエリ
         function handleSearchQuery(query) {
             searchQuery = query.toLowerCase();
             filterSearchList();
         }
 
+        // 検索タグ
         function filterSearchTag(tagText, element) {
             searchTag = tagText;
             const buttons = document.querySelectorAll('.search-tags .search-tag-btn');
@@ -2578,20 +2608,17 @@
                 const isApproved = approvedUsers.includes(log.username);
                 if (!isApproved) return false;
 
-                // 1. グローバルカテゴリーフィルター
                 let matchesGlobal = true;
                 if (globalCategory === 'TECHNO') matchesGlobal = log.discipline === 'テクノ293';
                 else if (globalCategory === 'FOIL') matchesGlobal = log.discipline.includes('フォイル');
                 else if (globalCategory === 'FIN') matchesGlobal = log.discipline === 'フィンスラローム';
 
-                // 2. キーワード検索
                 const matchesQuery = !searchQuery || 
                     (log.username && log.username.toLowerCase().includes(searchQuery)) ||
                     (log.location && log.location.toLowerCase().includes(searchQuery)) ||
                     (log.feeling && log.feeling.toLowerCase().includes(searchQuery)) ||
                     (log.issue && log.issue.toLowerCase().includes(searchQuery));
 
-                // 3. 検索タグ
                 let matchesTag = true;
                 if (searchTag === 'テクノ293') {
                     matchesTag = log.discipline === 'テクノ293';
@@ -2817,7 +2844,7 @@
                     <ul>
                         <li><strong>A/Bテスト案</strong>:
                             <br>【A】マストベースを「5mm前」にして、フォイルの初期アタックアングルを抑え、足にかかる負担を減らす.
-                            <br>【B】強風用のスタビライザー（140等）に変更し、シムを増やすことでピッチ of ブレを安定させる.
+                            <br>【B】強風用のスタビライザー（140等）に変更し、シムを増やすことでピッチのブレを安定させる.
                         </li>
                         <li><strong>フォーム</strong>: 足でボードをヒール側に突っ張る力を抜き、長いハーネスラインを使って腰の位置を外に出し、マストの真上に体重を垂直に落とし込む意識で乗ります.</li>
                     </ul>`
@@ -2843,7 +2870,7 @@
                 detail: `次回の練習で課題を克服するための「Fact-Hypothesis-Action」検証ループ案です.
                 <ul>
                     <li><strong>ステップ1（Fact）</strong>: 発生した課題が「どの風域」「どのコース」で最も強く出たかを記録します.</li>
-                    <li><strong>ステップ2（Hypothesis）</strong>: 課題がリフト過多なら「マスト前 / シム薄」、リフト不足なら「マスト後 / シム厚()」という対照仮説を立てます.</li>
+                    <li><strong>ステップ2（Hypothesis）</strong>: 課題がリフト過多なら「マスト前 / シム薄 ngon」、リフト不足なら「マスト後 / シム厚()」という対照仮説を立てます.</li>
                     <li><strong>ステップ3（Action）</strong>: 次回の練習開始時に、マスト位置かシムアングルを調整し、前後の走りの変化を比較します.</li>
                 </ul>`
             };
