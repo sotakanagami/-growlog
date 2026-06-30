@@ -223,7 +223,7 @@
             background: rgba(239, 68, 68, 0.1);
         }
 
-        /* カテゴリーフィルターバー (タイトルのすぐ下に配置) */
+        /* カテゴリーフィルターバー */
         .category-filter-bar {
             max-width: 600px;
             margin: 20px auto 0 auto;
@@ -255,6 +255,86 @@
             background: var(--primary-gradient);
             color: white;
             box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25);
+        }
+
+        /* 管理者専用承認パネル */
+        .admin-approval-panel {
+            max-width: 1400px;
+            margin: 20px auto 0 auto;
+            padding: 0 24px;
+        }
+
+        .admin-approval-card {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0.03) 100%);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-panel-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--orange);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .admin-user-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .admin-user-row {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-user-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .btn-approve {
+            background: var(--accent-gradient);
+            border: none;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+            transition: all 0.2s;
+        }
+
+        .btn-approve:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-reject {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-reject:hover {
+            background: var(--danger);
+            color: white;
         }
 
         /* ボトムナビゲーションバー */
@@ -430,13 +510,6 @@
             text-transform: uppercase;
         }
 
-        .feed-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
         /* 検索画面 */
         .search-container {
             max-width: 800px;
@@ -498,83 +571,6 @@
             background: var(--primary-gradient);
             color: white;
             border-color: transparent;
-        }
-
-        /* サイドバー・共通 */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .stats-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 24px;
-            backdrop-filter: blur(10px);
-        }
-
-        .log-list-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 24px;
-            backdrop-filter: blur(10px);
-            max-height: 600px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .log-list-header {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .log-items {
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            padding-right: 4px;
-        }
-
-        .log-item-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
-            padding: 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .log-item-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .log-item-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .log-item-tag {
-            font-size: 10px;
-            padding: 1px 6px;
-            border-radius: 4px;
-            margin-right: 6px;
-            font-weight: bold;
         }
 
         /* 詳細ビュー */
@@ -749,14 +745,13 @@
                 <div class="login-logo-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
                 </div>
-                <!-- アプリタイトル変更: GrowLog Windsurf -->
                 <h2 class="login-title">GrowLog Windsurf</h2>
                 <p class="login-subtitle">上達を加速させる練習ノート</p>
             </div>
 
             <div class="login-tabs">
                 <button id="tab-login" class="login-tab active" onclick="toggleLoginTab('login')">ログイン</button>
-                <button id="tab-signup" class="login-tab" onclick="toggleLoginTab('signup')">新規作成</button>
+                <button id="tab-signup" class="login-tab" onclick="toggleLoginTab('signup')">申請フォーム</button>
             </div>
 
             <!-- ログインフォーム -->
@@ -772,7 +767,7 @@
                 <button class="btn-auth" onclick="handleLogin()">ログイン</button>
             </div>
 
-            <!-- 新規アカウント作成フォーム -->
+            <!-- 新規アカウント申請フォーム (承認制) -->
             <div id="form-signup-box" style="display: none;">
                 <div class="form-group">
                     <label for="signup-username">希望ユーザーネーム</label>
@@ -782,7 +777,13 @@
                     <label for="signup-password">希望パスワード</label>
                     <input type="password" id="signup-password" placeholder="••••••••" required autocomplete="new-password">
                 </div>
-                <button class="btn-auth" style="background: var(--accent-gradient); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);" onclick="handleSignup()">アカウントを作成</button>
+                <!-- 👑 管理者承認コード入力欄を追加 -->
+                <div class="form-group">
+                    <label for="signup-admincode" style="color: var(--orange); font-weight:700;">管理者承認パスコード</label>
+                    <input type="password" id="signup-admincode" placeholder="管理者から教えられたコード" required>
+                    <span style="font-size: 10px; color: var(--text-muted); line-height: 1.3;">※管理者（金上颯大）から配布されたセキュリティパスコードを入力してください。</span>
+                </div>
+                <button class="btn-auth" style="background: var(--accent-gradient); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);" onclick="handleSignup()">承認申請を送る</button>
             </div>
         </div>
     </div>
@@ -795,9 +796,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
                 </div>
                 <div>
-                    <!-- アプリタイトル変更: GrowLog Windsurf -->
                     <span class="logo-text">GrowLog Windsurf</span>
-                    <span class="logo-tag">PROTOTYPE V4.4</span>
+                    <span class="logo-tag">PROTOTYPE V4.5</span>
                 </div>
             </div>
             
@@ -817,7 +817,20 @@
             </div>
         </header>
 
-        <!-- 👑 グローバルカテゴリーフィルターバー (TECHNO, FOIL, FIN切り替え) -->
+        <!-- 👑 管理者専用承認管理パネル (sotakanagamiにのみ表示) -->
+        <div id="admin-panel" class="admin-approval-panel" style="display: none;">
+            <div class="admin-approval-card">
+                <div class="admin-panel-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-alert"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span>金上颯大 管理コンソール：承認待ちの申請アカウント</span>
+                </div>
+                <div class="admin-user-list" id="admin-pending-users">
+                    <!-- 動的挿入 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- カテゴリーフィルターバー -->
         <div class="category-filter-bar">
             <button class="filter-btn active" id="btn-cat-all" onclick="setGlobalCategory('ALL', this)">ALL</button>
             <button class="filter-btn" id="btn-cat-techno" onclick="setGlobalCategory('TECHNO', this)">TECHNO</button>
@@ -899,7 +912,7 @@
                     <button class="search-tag-btn" onclick="filterSearchTag('微風', this)">微風 (5m-)</button>
                 </div>
                 <div class="feed-container" id="search-results-container" style="margin-top: 12px;">
-                    <!-- 動的挿入 -->
+                    <!-- 各自のログ一覧 -->
                 </div>
             </div>
         </div>
@@ -1153,6 +1166,9 @@
         const USERS_KEY = 'growlog_users_v4';
         const SESSION_KEY = 'growlog_current_user_v4';
         const STORAGE_KEY = 'growlog_records_v4_0';
+        
+        // 👑 セキュリティコード (申請に必須)
+        const SIGNUP_PASSCODE = 'sotaapprove';
 
         let logs = [];
         let activeLogId = null;
@@ -1163,7 +1179,7 @@
         let currentTab = 'home';
         let searchQuery = '';
         let searchTag = '';
-        let globalCategory = 'ALL'; // クローバル種目フィルター (ALL / TECHNO / FOIL / FIN)
+        let globalCategory = 'ALL'; 
 
         // ドキュメント初期化
         window.addEventListener('DOMContentLoaded', () => {
@@ -1178,11 +1194,13 @@
             if (data) {
                 try { users = JSON.parse(data); } catch (e) {}
             }
+            // sotakanagamiは管理者なので最初から status: "approved"
             const defaultUserExists = users.some(u => u.username === 'sotakanagami');
             if (!defaultUserExists) {
                 users.push({
                     username: 'sotakanagami',
-                    password: 'sota0016'
+                    password: 'sota0016',
+                    status: 'approved'
                 });
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
             }
@@ -1195,6 +1213,7 @@
                 currentUser = session;
                 showAppScreen();
                 loadLogs();
+                renderAdminPanel(); // 管理者用承認パネルを更新
             } else {
                 showLoginScreen();
             }
@@ -1233,7 +1252,7 @@
             }
         }
 
-        // ログイン処理
+        // ログイン処理 (承認ステータスチェックの追加)
         function handleLogin() {
             const userIn = document.getElementById('login-username').value.trim();
             const passIn = document.getElementById('login-password').value.trim();
@@ -1251,22 +1270,36 @@
 
             const user = users.find(u => u.username === userIn && u.password === passIn);
             if (user) {
+                // 👑 承認ステータスチェック
+                if (user.status !== 'approved') {
+                    alert('申請中のアカウントです。ログインするには管理者（金上颯大）の承認が必要です。');
+                    return;
+                }
+
                 currentUser = user.username;
                 StorageHelper.setItem(SESSION_KEY, currentUser);
                 showAppScreen();
                 loadLogs();
+                renderAdminPanel();
             } else {
                 alert('ユーザー名またはパスワードが正しくありません。');
             }
         }
 
-        // 新規アカウント作成
+        // 新規アカウント申請送信 (承認制)
         function handleSignup() {
             const userIn = document.getElementById('signup-username').value.trim();
             const passIn = document.getElementById('signup-password').value.trim();
+            const codeIn = document.getElementById('signup-admincode').value.trim();
 
-            if (!userIn || !passIn) {
-                alert('ユーザーネームとパスワードを決めてください。');
+            if (!userIn || !passIn || !codeIn) {
+                alert('すべての入力欄に入力してください。');
+                return;
+            }
+
+            // 👑 セキュリティコードの確認
+            if (codeIn !== SIGNUP_PASSCODE) {
+                alert('正しい「管理者承認パスコード」を入力してください。');
                 return;
             }
 
@@ -1281,40 +1314,115 @@
                 return;
             }
 
+            // 👑 status: "pending" (承認待ち) でアカウントを作成
             users.push({
                 username: userIn,
-                password: passIn
+                password: passIn,
+                status: 'pending'
             });
 
             StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
-            alert('アカウントを作成しました！ログインしてください。');
+            alert('管理者へのアカウント承認申請が送信されました！\nログインするには管理者（金上颯大）による承認を待つ必要があります。');
+            
             document.getElementById('signup-username').value = '';
             document.getElementById('signup-password').value = '';
+            document.getElementById('signup-admincode').value = '';
             toggleLoginTab('login');
         }
 
-        // ログアウト処理
+        // ログアウト
         function handleLogout() {
             StorageHelper.setItem(SESSION_KEY, '');
             currentUser = null;
             showLoginScreen();
         }
 
+        // 👑 管理者専用：承認管理パネルのレンダリング
+        function renderAdminPanel() {
+            const panel = document.getElementById('admin-panel');
+            const container = document.getElementById('admin-pending-users');
+            
+            // ログインしているのが sotakanagami（管理者）ではない場合は非表示
+            if (currentUser !== 'sotakanagami') {
+                panel.style.display = 'none';
+                return;
+            }
+
+            const data = StorageHelper.getItem(USERS_KEY);
+            let users = [];
+            if (data) {
+                try { users = JSON.parse(data); } catch(e) {}
+            }
+
+            // 承認待ちのユーザーを抽出
+            const pendingUsers = users.filter(u => u.status === 'pending');
+
+            if (pendingUsers.length === 0) {
+                panel.style.display = 'none';
+                return;
+            }
+
+            panel.style.display = 'block';
+            container.innerHTML = '';
+
+            pendingUsers.forEach(user => {
+                const userRow = document.createElement('div');
+                userRow.className = 'admin-user-row';
+                userRow.innerHTML = `
+                    <span class="admin-user-name">@${user.username}</span>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-approve" onclick="approveUser('${user.username}')">承認する</button>
+                        <button class="btn-reject" onclick="rejectUser('${user.username}')">拒否</button>
+                    </div>
+                `;
+                container.appendChild(userRow);
+            });
+        }
+
+        // 👑 アカウントを承認する処理
+        function approveUser(username) {
+            const data = StorageHelper.getItem(USERS_KEY);
+            let users = [];
+            if (data) {
+                try { users = JSON.parse(data); } catch(e) {}
+            }
+
+            const user = users.find(u => u.username === username);
+            if (user) {
+                user.status = 'approved';
+                StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
+                alert(`@${username} のアカウントを承認しました。ログイン可能になりました。`);
+                renderAdminPanel();
+            }
+        }
+
+        // 👑 アカウント申請を拒否（削除）する処理
+        function rejectUser(username) {
+            if (confirm(`@${username} のアカウント申請を拒否して削除しますか？`)) {
+                const data = StorageHelper.getItem(USERS_KEY);
+                let users = [];
+                if (data) {
+                    try { users = JSON.parse(data); } catch(e) {}
+                }
+
+                users = users.filter(u => u.username !== username);
+                StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
+                renderAdminPanel();
+            }
+        }
+
         // 【グローバルカテゴリーフィルター】の切り替え
         function setGlobalCategory(cat, element) {
             globalCategory = cat;
             
-            // 全フィルターボタンのactiveを解除
             const buttons = document.querySelectorAll('.category-filter-bar .filter-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             
             element.classList.add('active');
-
-            // 現在のアクティブなタブを再ロード
             switchTab(currentTab);
         }
 
-        // 【ボトムバー】タブの切り替え
+        // タブ切り替え
         function switchTab(tabName) {
             currentTab = tabName;
             
@@ -1338,7 +1446,7 @@
             }
         }
 
-        // モード切り替え
+        // モード変更によってフォームフィールドを切り替える
         function toggleDisciplineFields(val) {
             const technoFields = document.getElementById('techno-gear-fields');
             const foilFields = document.getElementById('foil-gear-fields');
@@ -1361,12 +1469,12 @@
             }
         }
 
-        // 風速表示
+        // 風速スライダー表示更新
         function updateWindValue(val) {
             document.getElementById('wind-val-display').innerText = val + ' m';
         }
 
-        // モーダル
+        // モーダル開閉
         function openModal() {
             isEditing = false;
             editingLogId = null;
@@ -1520,10 +1628,8 @@
                 try { allLogs = JSON.parse(data); } catch(e) {}
             }
 
-            // 現在ログイン中のユーザーで絞り込み
             let myLogs = allLogs.filter(log => log.username === currentUser);
 
-            // ログが一件もない場合、サンプルデータを登録
             if (myLogs.length === 0 && currentUser === 'sotakanagami') {
                 const samples = getSampleData();
                 samples.forEach(s => s.username = currentUser);
@@ -1532,7 +1638,6 @@
                 StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
             }
 
-            // 👑 グローバルカテゴリーフィルターの適用
             logs = myLogs.filter(log => {
                 if (globalCategory === 'ALL') return true;
                 if (globalCategory === 'TECHNO') return log.discipline === 'テクノ293';
@@ -1572,7 +1677,7 @@
                     tracker: '前 (Forward)',
                     boom: '胸の高さ',
                     other: 'ハーネスライン28インチ',
-                    feeling: '風速3〜5m of アンダーコンディション。国大の学生たちと合同で上り下りのレース練習を行う。微風時にダガーを出した状態での上りのスピードが学生たちに伸び悩んでいる様子。',
+                    feeling: '風速3〜5mのアンダーコンディション。国大の学生たちと合同で上り下りのレース練習を行う。微風時にダガーを出した状態での上りのスピードが学生たちに伸び悩んでいる様子。',
                     issue: 'クローズホールド（上り）で角度が取れず、下りのレグで他の艇に抜かれてしまう。パンピングの持続力が足りない。',
                     races: [
                         { rank: '2位 / 12艇中', start: '上3からジャストスタート。', memo: '上りのスピード・角度はまずまず。ダガーを完璧に垂直に下ろした。下りでダガーの収納が少し遅れ、アビームで抜かれて2位。' },
@@ -1978,7 +2083,7 @@
             switchTab(currentTab);
         }
 
-        // フィード描画 ＆ カテゴリー絞り込み
+        // フィード描画 ＆ カテゴリー絞り込み (statusがapprovedのユーザーの投稿のみ表示する安全策)
         function renderFeed() {
             const feedContainer = document.getElementById('feed-container');
             feedContainer.innerHTML = '';
@@ -1989,8 +2094,21 @@
                 try { allLogs = JSON.parse(data); } catch(e) {}
             }
 
-            // 👑 グローバルカテゴリーフィルターの適用
+            // 👑 承認済みのユーザー名リストを取得
+            const usersData = StorageHelper.getItem(USERS_KEY);
+            let approvedUsers = ['sotakanagami']; // sotakanagamiは常に承認済み
+            if (usersData) {
+                try {
+                    const parsedUsers = JSON.parse(usersData);
+                    approvedUsers = parsedUsers.filter(u => u.status === 'approved').map(u => u.username);
+                } catch(e) {}
+            }
+
+            // 承認済みユーザーかつ、グローバルカテゴリーフィルターに合致するログ
             let displayLogs = allLogs.filter(log => {
+                const isApproved = approvedUsers.includes(log.username);
+                if (!isApproved) return false;
+
                 if (globalCategory === 'ALL') return true;
                 if (globalCategory === 'TECHNO') return log.discipline === 'テクノ293';
                 if (globalCategory === 'FOIL') return log.discipline.includes('フォイル');
@@ -2096,8 +2214,20 @@
                 try { allLogs = JSON.parse(data); } catch(e) {}
             }
 
-            // 👑 グローバルフィルター & 個別フィルター
+            // 👑 承認済みユーザーのみ表示
+            const usersData = StorageHelper.getItem(USERS_KEY);
+            let approvedUsers = ['sotakanagami'];
+            if (usersData) {
+                try {
+                    const parsedUsers = JSON.parse(usersData);
+                    approvedUsers = parsedUsers.filter(u => u.status === 'approved').map(u => u.username);
+                } catch(e) {}
+            }
+
             let filtered = allLogs.filter(log => {
+                const isApproved = approvedUsers.includes(log.username);
+                if (!isApproved) return false;
+
                 // 1. グローバルカテゴリーフィルター
                 let matchesGlobal = true;
                 if (globalCategory === 'TECHNO') matchesGlobal = log.discipline === 'テクノ293';
@@ -2301,7 +2431,7 @@
                 <ul>
                     <li><strong>1. クローズホールド（上り）</strong>: 
                         <br>・微風時：トラッカー「前」、レイルは山側へヒール、セイル緩め。
-                        <br>・強風時：トラッカー「前〜中」、ボードは完全フラット、ダウンベタ引き、バテン下部強め。
+                        <br>·強風時：トラッカー「前〜中」、ボードは完全フラット、ダウンベタ引き、バテン下部強め。
                     </li>
                     <li><strong>2. ダウンウインド（下り）</strong>: 
                         <br>・共通：トラッカー「後」、ダガー完全収納。
@@ -2339,7 +2469,7 @@
                             <br>【A】マストベースを「5mm前」にして、フォイルの初期アタックアングルを抑え、足にかかる負担を減らす.
                             <br>【B】強風用のスタビライザー（140等）に変更し、シムを増やすことでピッチのブレを安定させる.
                         </li>
-                        <li><strong>フォーム</strong>: 足でボードをヒール側に突っ張る力を抜き、長いハーネスラインを使って腰の位置を外に出し、マストの真上に体重を垂直に落とす意識で乗ります.</li>
+                        <li><strong>フォーム</strong>: 足でボードをヒール側に突っ張る力を抜き、長いハーネスラインを使って腰の位置を外に出し、マストの真上に体重を垂直に落とし込む意識で乗ります.</li>
                     </ul>`
                 };
             }
