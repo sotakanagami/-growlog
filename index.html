@@ -230,6 +230,49 @@
             stroke: white !important;
         }
 
+        /* 👑 管理画面用承認・拒否ボタン */
+        .btn-approve {
+            background: var(--accent-gradient);
+            border: none;
+            color: white !important;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-approve:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-reject {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger) !important;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-reject:hover {
+            background: var(--danger);
+            color: white !important;
+            border-color: transparent;
+        }
+
         /* ヘッダー */
         header {
             padding: 20px 8%;
@@ -894,7 +937,7 @@
                 </div>
                 <div>
                     <span class="logo-text">GrowLog Windsurf</span>
-                    <span class="logo-tag">PROTOTYPE V4.8</span>
+                    <span class="logo-tag">PROTOTYPE V4.9</span>
                 </div>
             </div>
             
@@ -1034,7 +1077,7 @@
                     <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">全体のユーザー管理、練習ログの管理、システムパラメータの調整を行います。</p>
                 </div>
                 <div style="display:flex; gap:12px;">
-                    <!-- 一般モードボタン (btn-new-logで文字を完全に白に固定) -->
+                    <!-- 一般モードボタン -->
                     <button class="btn-new-log" onclick="enterGeneralUserMode()">
                         👁 一般モード（動作確認）
                     </button>
@@ -1051,22 +1094,48 @@
                 <button class="admin-dashboard-tab" id="tab-adm-settings" onclick="switchAdminTab('settings')">⚙️ システム詳細設定</button>
             </div>
 
-            <!-- A. ユーザー管理タブ -->
+            <!-- A. ユーザー管理・申請承認タブ -->
             <div id="adm-content-users" class="admin-tab-content">
-                <h3 style="font-size:15px; margin-bottom:12px; color:var(--admin-purple);">👥 登録および申請ユーザー一覧</h3>
-                <div class="admin-table-wrapper">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>ユーザーネーム</th>
-                                <th>ステータス</th>
-                                <th>アクション</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-users-tbody">
-                            <!-- JSで動的生成 -->
-                        </tbody>
-                    </table>
+                <!-- 📥 アカウント作成申請一覧セクション -->
+                <div style="margin-bottom: 32px;">
+                    <h3 style="font-size:15px; margin-bottom:12px; color:var(--orange); display:flex; align-items:center; gap:6px;">
+                        <span>📥 新規アカウント作成申請（申請フォーム一覧）</span>
+                    </h3>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>申請ユーザーネーム</th>
+                                    <th>ステータス</th>
+                                    <th>アクション</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-pending-users-tbody">
+                                <!-- 承認待ちユーザーのみ動的に挿入 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 👥 既存承認済みユーザー一覧セクション -->
+                <div>
+                    <h3 style="font-size:15px; margin-bottom:12px; color:var(--admin-purple); display:flex; align-items:center; gap:6px;">
+                        <span>👥 登録済みユーザー一覧</span>
+                    </h3>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ユーザーネーム</th>
+                                    <th>権限 / ステータス</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-approved-users-tbody">
+                                <!-- 承認済みユーザーのみ動的に挿入 -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -1632,56 +1701,87 @@
             }
         }
 
-        // 管理者画面：ユーザーリストの表示
+        // 👑 管理者画面：新規申請一覧および登録済みユーザー一覧の並列表示
         function renderAdminUsers() {
-            const tbody = document.getElementById('admin-users-tbody');
-            tbody.innerHTML = '';
+            const pendingTbody = document.getElementById('admin-pending-users-tbody');
+            const approvedTbody = document.getElementById('admin-approved-users-tbody');
+            
+            pendingTbody.innerHTML = '';
+            approvedTbody.innerHTML = '';
 
             const data = StorageHelper.getItem(USERS_KEY);
             let users = [];
             if (data) {
-                try { users = JSON.parse(data); } catch(e) {}
+                try { users = JSON.parse(data); } catch (e) {}
             }
 
-            if (users.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">登録ユーザーはいません。</td></tr>`;
-                return;
-            }
+            const pendingUsers = users.filter(u => u.status === 'pending');
+            const approvedUsers = users.filter(u => u.status === 'approved' || u.username === 'sotakanagami');
 
-            users.forEach(user => {
-                const tr = document.createElement('tr');
-                
-                const isPending = user.status === 'pending';
-                const isAdmin = user.username === 'sotakanagami';
-                
-                let statusHtml = '';
-                if (isAdmin) {
-                    statusHtml = `<span class="status-badge approved" style="background:rgba(139, 92, 246, 0.15); color:var(--admin-purple);">管理者</span>`;
-                } else if (isPending) {
-                    statusHtml = `<span class="status-badge pending">承認待ち (Pending)</span>`;
-                } else {
-                    statusHtml = `<span class="status-badge approved">承認済み (Approved)</span>`;
-                }
-
-                let actionsHtml = '';
-                if (isAdmin) {
-                    actionsHtml = `<span style="color:var(--text-dark);">操作不可</span>`;
-                } else {
-                    actionsHtml = `
-                        <div style="display:flex; gap:8px;">
-                            ${isPending ? `<button class="btn-approve" onclick="adminApproveUser('${user.username}')">承認する</button>` : ''}
-                            <button class="btn-reject" onclick="adminDeleteUser('${user.username}')">削除</button>
-                        </div>
+            // 1. 新規アカウント申請フォーム（承認待ち）の描画
+            if (pendingUsers.length === 0) {
+                pendingTbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" style="text-align:center; color:var(--text-dark); padding:20px;">現在、新規のアカウント申請（未承認）はありません。</td>
+                    </tr>
+                `;
+            } else {
+                pendingUsers.forEach(user => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-weight:700; color:var(--text-main);">@${user.username}</td>
+                        <td><span class="status-badge pending">申請中 (承認待ち)</span></td>
+                        <td>
+                            <div style="display:flex; gap:10px;">
+                                <button class="btn-approve" onclick="adminApproveUser('${user.username}')">
+                                    ✅ 承認する
+                                </button>
+                                <button class="btn-reject" onclick="adminRejectUser('${user.username}')">
+                                    ❌ 拒否する
+                                </button>
+                            </div>
+                        </td>
                     `;
-                }
+                    pendingTbody.appendChild(tr);
+                });
+            }
+
+            // 2. 登録済みユーザー一覧（利用可能）の描画
+            approvedUsers.forEach(user => {
+                const tr = document.createElement('tr');
+                const isAdmin = user.username === 'sotakanagami';
+
+                let roleHtml = isAdmin
+                    ? `<span class="status-badge approved" style="background:rgba(139, 92, 246, 0.15); color:var(--admin-purple);">👑 管理者</span>`
+                    : `<span class="status-badge approved">👤 一般ユーザー</span>`;
+
+                let actionHtml = isAdmin
+                    ? `<span style="color:var(--text-dark); font-size:12px;">操作不可</span>`
+                    : `<button class="btn-reject" onclick="adminDeleteUser('${user.username}')">👤 ユーザー削除</button>`;
 
                 tr.innerHTML = `
-                    <td style="font-weight:700;">@${user.username}</td>
-                    <td>${statusHtml}</td>
-                    <td>${actionsHtml}</td>
+                    <td style="font-weight:700; color:var(--text-main);">@${user.username}</td>
+                    <td>${roleHtml}</td>
+                    <td>${actionHtml}</td>
                 `;
-                tbody.appendChild(tr);
+                approvedTbody.appendChild(tr);
             });
+        }
+
+        // 新規申請の拒否（却下・アカウント申請データ破棄）
+        function adminRejectUser(username) {
+            if (confirm(`@${username} からのアカウント作成申請を【拒否】しますか？\n申請データは削除されます。`)) {
+                const data = StorageHelper.getItem(USERS_KEY);
+                let users = [];
+                if (data) {
+                    try { users = JSON.parse(data); } catch(e) {}
+                }
+                users = users.filter(u => u.username !== username);
+                StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
+
+                alert(`@${username} の申請を却下しました。`);
+                renderAdminUsers();
+            }
         }
 
         // 管理者画面：全投稿ノートリストの表示
@@ -2058,7 +2158,7 @@
                     boom: '胸の高さ',
                     other: 'ハーネスライン28インチ',
                     feeling: '風速3〜5mのアンダーコンディション。国大の学生たちと合同で上り下りのレース練習を行う。微風時にダガーを出した状態での上りのスピードが学生たちに伸び悩んでいる様子。',
-                    issue: 'クローズホールド（上り）で角度が取れず、下りのレグで他の艇に抜かれてしまう。パンピングの持続力が足りない。',
+                    issue: 'クローズホールド（上り）で角度が取れず、下りのレグで他の艇に抜かれてしまう。パンピングの持続力足りない。',
                     races: [
                         { rank: '2位 / 12艇中', start: '上3からジャストスタート。', memo: '上りのスピード・角度はまずまず。ダガーを完璧に垂直に下ろした。下りでダガーの収納が少し遅れ、アビームで抜かれて2位。' },
                         { rank: '4位 / 12艇中', start: '少し遅れて2列目から。', memo: 'スタートミスで悪い風を受けた。下りのパンピングで追い上げたが順位は4位まで。パンピングの落とし込みがまだ甘い。' }
