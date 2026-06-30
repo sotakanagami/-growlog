@@ -44,6 +44,134 @@
             padding-bottom: 60px;
         }
 
+        /* ログイン画面 */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(13, 27, 42, 0.85);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(16px);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-logo-icon {
+            background: var(--primary-gradient);
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .login-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 4px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+        }
+
+        .login-tab {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .login-tab.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.2);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        }
+
+        .btn-auth {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+            transition: all 0.3s;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35);
+        }
+
+        /* ヘッダー・メインアプリ画面 */
         header {
             padding: 24px 8%;
             display: flex;
@@ -57,60 +185,42 @@
             z-index: 100;
         }
 
-        .logo-area {
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
 
-        .logo-icon {
-            background: var(--primary-gradient);
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
-        }
-
-        .logo-text {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(180deg, #FFFFFF 0%, #CBD5E1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .logo-tag {
-            font-size: 10px;
-            background: rgba(14, 165, 233, 0.15);
-            color: var(--primary);
-            padding: 2px 8px;
+        .user-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
             border-radius: 99px;
-            border: 1px solid rgba(14, 165, 233, 0.2);
+            font-size: 13px;
             font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .btn-new-log {
-            background: var(--primary-gradient);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 12px;
+        .btn-logout {
+            background: none;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 4px;
+            transition: all 0.2s;
         }
 
-        .btn-new-log:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(14, 165, 233, 0.35);
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.1);
         }
 
         main {
@@ -359,25 +469,6 @@
             gap: 12px;
         }
 
-        .btn-delete {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--danger);
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .btn-delete:hover {
-            background: var(--danger);
-            color: white;
-        }
-
         /* グリッドレイアウト */
         .detail-grid {
             display: grid;
@@ -556,46 +647,6 @@
             gap: 20px;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .form-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            padding: 10px 14px;
-            border-radius: 10px;
-            color: white;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
-        }
-
         .slider-group {
             display: flex;
             align-items: center;
@@ -673,93 +724,134 @@
 </head>
 <body>
 
-    <header>
-        <div class="logo-area">
-            <!-- Inline SVG for trending-up -->
-            <div class="logo-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+    <!-- 🚪 【画面A】ログイン・アカウント作成画面 -->
+    <div id="login-screen" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                </div>
+                <h2 class="login-title">GrowLog</h2>
+                <p class="login-subtitle">上達を加速させる練習ノート</p>
             </div>
-            <div>
-                <span class="logo-text">GrowLog</span>
-                <span class="logo-tag">PROTOTYPE V4.0</span>
+
+            <div class="login-tabs">
+                <button id="tab-login" class="login-tab active" onclick="toggleLoginTab('login')">ログイン</button>
+                <button id="tab-signup" class="login-tab" onclick="toggleLoginTab('signup')">新規作成</button>
+            </div>
+
+            <!-- ログインフォーム -->
+            <div id="form-login-box">
+                <div class="form-group">
+                    <label for="login-username">ユーザーネーム</label>
+                    <input type="text" id="login-username" placeholder="例: sotakanagami" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">パスワード</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+                <button class="btn-auth" onclick="handleLogin()">ログイン</button>
+            </div>
+
+            <!-- 新規アカウント作成フォーム -->
+            <div id="form-signup-box" style="display: none;">
+                <div class="form-group">
+                    <label for="signup-username">希望ユーザーネーム</label>
+                    <input type="text" id="signup-username" placeholder="例: wind_rider" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">希望パスワード</label>
+                    <input type="password" id="signup-password" placeholder="••••••••" required autocomplete="new-password">
+                </div>
+                <button class="btn-auth" style="background: var(--accent-gradient); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);" onclick="handleSignup()">アカウントを作成</button>
             </div>
         </div>
-        <button class="btn-new-log" onclick="openModal()">
-            <!-- Inline SVG for plus-circle -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-            練習ノートを書く
-        </button>
-    </header>
+    </div>
 
-    <main>
-        <!-- 左カラム：サイドバー -->
-        <div class="sidebar">
-            <!-- 統計情報 -->
-            <div class="stats-panel">
-                <h3 class="stats-title">練習スタッツ</h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="stat-count">0</div>
-                        <div class="stat-lbl">総練習日数</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="stat-hours">0</div>
-                        <div class="stat-lbl">風速平均 (m)</div>
-                    </div>
+    <!-- ⛵️ 【画面B】メインアプリケーション画面 -->
+    <div id="app-screen" style="display: none;">
+        <header>
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                </div>
+                <div>
+                    <span class="logo-text">GrowLog</span>
+                    <span class="logo-tag">PROTOTYPE V4.0</span>
                 </div>
             </div>
-
-            <!-- ログ一覧 -->
-            <div class="log-list-panel">
-                <div class="log-list-header">
-                    <span>練習ログ履歴</span>
-                    <!-- Inline SVG for calendar -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            
+            <div class="header-actions">
+                <!-- ユーザーバッジ -->
+                <div class="user-badge" id="current-user-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span id="header-username">Guest</span>
                 </div>
-                <div class="log-items" id="log-items-container">
-                    <!-- JavaScriptで動的にログを挿入 -->
-                </div>
+                <!-- ログアウトボタン -->
+                <button class="btn-logout" onclick="handleLogout()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    ログアウト
+                </button>
+                <button class="btn-new-log" onclick="openModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    練習ノートを書く
+                </button>
             </div>
-        </div>
+        </header>
 
-        <!-- 右カラム：メインコンテンツ -->
-        <div class="content-area">
-            <!-- ネクストアクション看板 -->
-            <div class="next-action-banner" id="banner-action" style="display: none;">
-                <div class="next-action-icon">
-                    <!-- Inline SVG for compass -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-                </div>
-                <div class="next-action-info">
-                    <h4>次回の最優先テストアクション</h4>
-                    <p id="banner-action-text">課題を登録すると、ここにネクストアクションが表示されます。</p>
-                </div>
-            </div>
-
-            <!-- 詳細ビューパネル -->
-            <div class="detail-panel" id="detail-panel">
-                <!-- 初期状態の空画面 -->
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <!-- Inline SVG for book-open -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <main>
+            <!-- 左カラム：サイドバー -->
+            <div class="sidebar">
+                <div class="stats-panel">
+                    <h3 class="stats-title">練習スタッツ</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-count">0</div>
+                            <div class="stat-lbl">総練習日数</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-hours">0</div>
+                            <div class="stat-lbl">風速平均 (m)</div>
+                        </div>
                     </div>
-                    <div>
-                        <h3 style="color: white; margin-bottom: 8px;">ログが選択されていません</h3>
-                        <p style="font-size: 14px;">左の履歴から選択するか、新しく練習ノートを記入してください。</p>
+                </div>
+
+                <div class="log-list-panel">
+                    <div class="log-list-header">
+                        <span>練習ログ履歴</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <div class="log-items" id="log-items-container">
+                        <!-- 動的挿入 -->
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
 
-    <!-- 新規登録・編集用モーダル -->
+            <!-- 右カラム：メイン -->
+            <div class="content-area">
+                <div class="next-action-banner" id="banner-action" style="display: none;">
+                    <div class="next-action-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                    </div>
+                    <div class="next-action-info">
+                        <h4>次回の最優先テストアクション</h4>
+                        <p id="banner-action-text">課題を登録すると、ここにネクストアクションが表示されます。</p>
+                    </div>
+                </div>
+
+                <div class="detail-panel" id="detail-panel">
+                    <!-- 初期状態 -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 登録・編集用モーダル -->
     <div class="modal" id="log-modal">
         <div class="modal-container">
             <div class="modal-header">
                 <h3 class="modal-title">新規練習ノート作成</h3>
                 <button class="modal-close" onclick="closeModal()">
-                    <!-- Inline SVG for x -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -825,14 +917,12 @@
 
                 <!-- 道具設定 -->
                 <h4 style="font-size: 14px; color: var(--primary); margin-top: 10px;">ギアセッティング</h4>
-                
-                <!-- 共通項目：セイル -->
                 <div class="form-group">
                     <label for="form-sail">セイルサイズ (㎡)</label>
-                    <input type="text" id="form-sail" placeholder="例: 7.8 (テクノ規定サイズ)" value="7.8">
+                    <input type="text" id="form-sail" placeholder="例: 7.8" value="7.8">
                 </div>
 
-                <!-- 【テクノ293用ギア設定】 -->
+                <!-- テクノ用ギア設定 -->
                 <div id="techno-gear-fields" style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
                     <div class="form-row">
                         <div class="form-group">
@@ -846,7 +936,7 @@
                         </div>
                         <div class="form-group">
                             <label for="form-techno-down">ダウンテンション</label>
-                            <input type="text" id="form-techno-down" placeholder="例: ベタ引き、残り1cmなど" value="ベタ引き">
+                            <input type="text" id="form-techno-down" value="ベタ引き">
                         </div>
                     </div>
                     <div class="form-row">
@@ -861,102 +951,80 @@
                         </div>
                         <div class="form-group">
                             <label for="form-techno-out">アウトテンション</label>
-                            <input type="text" id="form-techno-out" placeholder="例: +1cm、ニュートラルなど" value="ニュートラル">
+                            <input type="text" id="form-techno-out" value="ニュートラル">
                         </div>
                     </div>
                     
-                    <!-- バテンテンション 1〜6番個別入力エリア -->
                     <div class="form-group">
-                        <label>バテンテンション (各番の角度で記録 例: 90°)</label>
+                        <label>バテンテンション</label>
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 6px; background: rgba(255,255,255,0.01); padding: 12px; border-radius: 10px; border: 1px solid var(--border-color);">
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#1 (トップ)</span>
-                                <input type="text" id="form-techno-batten-1" value="90°" style="padding: 6px 10px; text-align: center;">
-                            </div>
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#2</span>
-                                <input type="text" id="form-techno-batten-2" value="90°" style="padding: 6px 10px; text-align: center;">
-                            </div>
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#3</span>
-                                <input type="text" id="form-techno-batten-3" value="90°" style="padding: 6px 10px; text-align: center;">
-                            </div>
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#4</span>
-                                <input type="text" id="form-techno-batten-4" value="90°" style="padding: 6px 10px; text-align: center;">
-                            </div>
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#5</span>
-                                <input type="text" id="form-techno-batten-5" value="90°" style="padding: 6px 10px; text-align: center;">
-                            </div>
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                <span style="font-size:10px; color:var(--text-muted); font-weight:600;">#6 (ボトム)</span>
-                                <input type="text" id="form-techno-batten-6" value="90°" style="padding: 6px 10px; text-align: center;">
-                            </div>
+                            <div style="display:flex; flex-direction:column; gap:4px;"><span style="font-size:10px; color:var(--text-muted);">#1</span><input type="text" id="form-techno-batten-1" value="90°"></div>
+                            <div style="display:flex; flex-direction:column; gap:4px;"><span style="font-size:10px; color:var(--text-muted);">#2</span><input type="text" id="form-techno-batten-2" value="90°"></div>
+                            <div style="display:flex; flex-direction:column; gap:4px;"><span style="font-size:10px; color:var(--text-muted);">#3</span><input type="text" id="form-techno-batten-3" value="90°"></div>
+                            <div style="display:flex; flex-direction:column; gap:4px;"><span style="font-size:10px; color:var(--text-muted);">#4</span><input type="text" id="form-techno-batten-4" value="90°"></div>
+                            <div style="display:flex; flex-direction:column; gap:4px;"><span style="font-size:10px; color:var(--text-muted);">#5</span><input type="text" id="form-techno-batten-5" value="90°"></div>
+                            <div style="display:flex; flex-direction:column; gap:4px;"><span style="font-size:10px; color:var(--text-muted);">#6</span><input type="text" id="form-techno-batten-6" value="90°"></div>
                         </div>
                     </div>
 
-                    <!-- マストトラッカー位置 -->
                     <div class="form-row">
                         <div class="form-group">
                             <label for="form-techno-tracker">マストトラッカー位置</label>
                             <select id="form-techno-tracker">
                                 <option value="前 (Forward)">前 (Forward) - 上り/微風用</option>
                                 <option value="中 (Middle)" selected>中 (Middle) - 基準/中風用</option>
-                                <option value="後 (Back)">後 (Back) - 下り/強風プレーニング用</option>
+                                <option value="後 (Back)">後 (Back) - 下り/強風用</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="form-techno-boom">ブームの高さ</label>
-                            <input type="text" id="form-techno-boom" placeholder="例: 胸の高さ、顎の高さなど" value="胸の高さ">
+                            <input type="text" id="form-techno-boom" value="胸の高さ">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="form-techno-other">その他（ハーネスライン等）</label>
-                        <input type="text" id="form-techno-other" placeholder="例: ハーネスライン28インチなど" value="なし">
+                        <label for="form-techno-other">その他</label>
+                        <input type="text" id="form-techno-other" value="なし">
                     </div>
                 </div>
 
-                <!-- 【フォイル用ギア設定】 -->
+                <!-- フォイル用ギア設定 -->
                 <div id="foil-gear-fields" style="display: none; flex-direction: column; gap: 20px; width: 100%;">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="form-foil-mast">マストジョイント位置 (mm)</label>
-                            <input type="text" id="form-foil-mast" placeholder="例: 155" value="155">
+                            <input type="text" id="form-foil-mast" value="155">
                         </div>
                         <div class="form-group">
-                            <label for="form-foil-stabilizer">スタビライザー (リアウイング)</label>
-                            <input type="text" id="form-foil-stabilizer" placeholder="例: 140" value="140">
+                            <label for="form-foil-stabilizer">スタビライザー</label>
+                            <input type="text" id="form-foil-stabilizer" value="140">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="form-foil-shim">スタビライザー・シム (mm)</label>
-                        <input type="text" id="form-foil-shim" placeholder="例: 2.0" value="2.0">
+                        <input type="text" id="form-foil-shim" value="2.0">
                     </div>
                 </div>
 
-                <!-- 🏁 ラウンディング（レース練習）レポート -->
+                <!-- レースレポート -->
                 <h4 style="font-size: 14px; color: var(--primary); margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
                     <span>🏁 ラウンディング（レース練習）レポート</span>
                     <button type="button" class="btn-new-log" style="padding: 4px 12px; font-size: 11px; background: var(--accent-gradient); box-shadow: none;" onclick="addRaceForm()">
-                        <!-- Inline SVG for plus -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         レースを追加
                     </button>
                 </h4>
                 <div id="form-race-container" style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
-                    <!-- JavaScriptで動的にレースフォームブロックを追加 -->
+                    <!-- 動的 -->
                 </div>
 
-                <!-- ノート内容 -->
                 <h4 style="font-size: 14px; color: var(--primary); margin-top: 10px;">練習メモ</h4>
                 <div class="form-group">
                     <label for="form-feeling">今日の気づき・感覚</label>
-                    <textarea id="form-feeling" rows="3" placeholder="走りの調子、道具の当たり感、良かった動作などを記入します。"></textarea>
+                    <textarea id="form-feeling" rows="3"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="form-issue">今日の課題・改善したいこと</label>
-                    <textarea id="form-issue" rows="3" placeholder="例:「上りの角度が取れない」「下りでプレーニングしない」「ジャイブで沈（チン）する」など、課題を記入してください。" required></textarea>
+                    <textarea id="form-issue" rows="3" required></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -966,60 +1034,157 @@
         </div>
     </div>
 
-    <!-- JavaScriptロジック -->
     <script>
-        // 安全なローカルストレージのヘルパークラス
-        const StorageHelper = {
-            memoryStorage: {},
-
-            isSupported() {
-                try {
-                    const testKey = '__storage_test__';
-                    localStorage.setItem(testKey, testKey);
-                    localStorage.removeItem(testKey);
-                    return true;
-                } catch (e) {
-                    return false;
-                }
-            },
-
-            getItem(key) {
-                if (this.isSupported()) {
-                    try {
-                        return localStorage.getItem(key);
-                    } catch (e) {
-                        console.warn("localStorage.getItem failed, using memory fallback", e);
-                    }
-                }
-                return this.memoryStorage[key] || null;
-            },
-
-            setItem(key, value) {
-                if (this.isSupported()) {
-                    try {
-                        localStorage.setItem(key, value);
-                        return;
-                    } catch (e) {
-                        console.warn("localStorage.setItem failed, using memory fallback", e);
-                    }
-                }
-                this.memoryStorage[key] = value;
-            }
-        };
-
-        // 新仕様v4.0（編集対応 & AI再生成機能）
+        // アカウント設定用のキー
+        const USERS_KEY = 'growlog_users_v4';
+        const SESSION_KEY = 'growlog_current_user_v4';
         const STORAGE_KEY = 'growlog_records_v4_0';
+
         let logs = [];
         let activeLogId = null;
         let raceCount = 0;
-        let isEditing = false;       // 編集モードフラグ
-        let editingLogId = null;     // 編集中のログID
+        let isEditing = false;
+        let editingLogId = null;
+        let currentUser = null;
 
-        // 初期化
+        // ドキュメント初期化
         window.addEventListener('DOMContentLoaded', () => {
-            loadLogs();
-            document.getElementById('form-date').valueAsDate = new Date();
+            initializeUsers();
+            checkSession();
         });
+
+        // ユーザーデータベースの初期化
+        function initializeUsers() {
+            let users = [];
+            const data = StorageHelper.getItem(USERS_KEY);
+            if (data) {
+                try {
+                    users = JSON.parse(data);
+                } catch (e) {
+                    console.error("User list load error", e);
+                }
+            }
+            // 指定のデフォルトアカウント（sotakanagami / sota0016）を自動作成
+            const defaultUserExists = users.some(u => u.username === 'sotakanagami');
+            if (!defaultUserExists) {
+                users.push({
+                    username: 'sotakanagami',
+                    password: 'sota0016'
+                });
+                StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
+            }
+        }
+
+        // セッションチェック
+        function checkSession() {
+            const session = StorageHelper.getItem(SESSION_KEY);
+            if (session) {
+                currentUser = session;
+                showAppScreen();
+                loadLogs();
+            } else {
+                showLoginScreen();
+            }
+        }
+
+        // 画面の切り替え
+        function showLoginScreen() {
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('app-screen').style.display = 'none';
+        }
+
+        function showAppScreen() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'block';
+            document.getElementById('header-username').innerText = currentUser;
+        }
+
+        // タブ切り替え（ログイン / 新規作成）
+        function toggleLoginTab(tab) {
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+            const boxLogin = document.getElementById('form-login-box');
+            const boxSignup = document.getElementById('form-signup-box');
+
+            if (tab === 'login') {
+                tabLogin.classList.add('active');
+                tabSignup.classList.remove('active');
+                boxLogin.style.display = 'block';
+                boxSignup.style.display = 'none';
+            } else {
+                tabLogin.classList.remove('active');
+                tabSignup.classList.add('active');
+                boxLogin.style.display = 'none';
+                boxSignup.style.display = 'block';
+            }
+        }
+
+        // ログイン処理
+        function handleLogin() {
+            const userIn = document.getElementById('login-username').value.trim();
+            const passIn = document.getElementById('login-password').value.trim();
+
+            if (!userIn || !passIn) {
+                alert('ユーザーネームとパスワードを入力してください。');
+                return;
+            }
+
+            const data = StorageHelper.getItem(USERS_KEY);
+            let users = [];
+            if (data) {
+                try { users = JSON.parse(data); } catch(e) {}
+            }
+
+            const user = users.find(u => u.username === userIn && u.password === passIn);
+            if (user) {
+                currentUser = user.username;
+                StorageHelper.setItem(SESSION_KEY, currentUser);
+                showAppScreen();
+                loadLogs();
+            } else {
+                alert('ユーザー名またはパスワードが正しくありません。');
+            }
+        }
+
+        // 新規アカウント作成（サインアップ）
+        function handleSignup() {
+            const userIn = document.getElementById('signup-username').value.trim();
+            const passIn = document.getElementById('signup-password').value.trim();
+
+            if (!userIn || !passIn) {
+                alert('ユーザーネームとパスワードを決めてください。');
+                return;
+            }
+
+            const data = StorageHelper.getItem(USERS_KEY);
+            let users = [];
+            if (data) {
+                try { users = JSON.parse(data); } catch(e) {}
+            }
+
+            if (users.some(u => u.username === userIn)) {
+                alert('このユーザー名はすでに使用されています。');
+                return;
+            }
+
+            users.push({
+                username: userIn,
+                password: passIn
+            });
+
+            StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
+            alert('アカウントを作成しました！ログインしてください。');
+            document.getElementById('signup-username').value = '';
+            document.getElementById('signup-password').value = '';
+            toggleLoginTab('login');
+        }
+
+        // ログアウト処理
+        function handleLogout() {
+            StorageHelper.setItem(SESSION_KEY, '');
+            currentUser = null;
+            showLoginScreen();
+        }
 
         // モード変更によってフォームフィールドを切り替える
         function toggleDisciplineFields(val) {
@@ -1031,12 +1196,12 @@
                 technoFields.style.display = 'flex';
                 foilFields.style.display = 'none';
                 sailInput.value = '7.8';
-                sailInput.placeholder = '例: 7.8 (テクノ規定サイズ)';
+                sailInput.placeholder = '例: 7.8';
             } else if (val.includes('フォイル')) {
                 technoFields.style.display = 'none';
                 foilFields.style.display = 'flex';
                 sailInput.value = '7.0';
-                sailInput.placeholder = '例: SEVERNE 7.0';
+                sailInput.placeholder = '例: 7.0';
             } else {
                 technoFields.style.display = 'none';
                 foilFields.style.display = 'none';
@@ -1049,7 +1214,7 @@
             document.getElementById('wind-val-display').innerText = val + ' m';
         }
 
-        // モーダル開閉（新規作成）
+        // モーダル開閉
         function openModal() {
             isEditing = false;
             editingLogId = null;
@@ -1077,7 +1242,7 @@
             updateWindValue(8);
         }
 
-        // 既存ログの編集モーダル展開
+        // 過去ログ編集展開
         function editLog(id) {
             const log = logs.find(l => l.id === id);
             if (!log) return;
@@ -1085,10 +1250,8 @@
             isEditing = true;
             editingLogId = id;
 
-            // モーダルタイトルを編集に変更
             document.querySelector('.modal-title').innerText = '練習ノートの編集';
 
-            // 各フォームに現在のデータを充填
             document.getElementById('form-date').value = log.date;
             document.getElementById('form-location').value = log.location;
             document.getElementById('form-discipline').value = log.discipline;
@@ -1103,7 +1266,6 @@
 
             toggleDisciplineFields(log.discipline);
 
-            // ギア値の復元
             if (log.discipline === 'テクノ293') {
                 document.getElementById('form-techno-ext').value = log.ext || '26';
                 document.getElementById('form-techno-down').value = log.down || 'ベタ引き';
@@ -1124,7 +1286,6 @@
                 document.getElementById('form-foil-shim').value = log.shim || '2.0';
             }
 
-            // レースレポートフォームの動的構築
             const raceContainer = document.getElementById('form-race-container');
             raceContainer.innerHTML = '';
             raceCount = 0;
@@ -1134,7 +1295,6 @@
                 });
             }
 
-            // モーダルオープン
             document.getElementById('log-modal').classList.add('open');
         }
 
@@ -1151,7 +1311,6 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
                     <span style="font-size: 12px; font-weight: bold; color: var(--primary);">Race ${raceCount}</span>
                     <button type="button" style="background:none; border:none; color:var(--danger); cursor:pointer;" onclick="removeRaceForm(${raceCount})">
-                        <!-- Inline SVG for trash -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                     </button>
                 </div>
@@ -1196,23 +1355,36 @@
             });
         }
 
-        // ローカルストレージから読み込み
+        // データの読み込み
         function loadLogs() {
             const data = StorageHelper.getItem(STORAGE_KEY);
+            let allLogs = [];
             if (data) {
                 try {
-                    logs = JSON.parse(data);
-                    logs.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    allLogs = JSON.parse(data);
                 } catch (e) {
-                    console.error("Data parse error, loading sample data", e);
-                    logs = getSampleData();
+                    console.error("Data parse error", e);
                 }
-            } else {
-                logs = getSampleData();
-                StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logs));
             }
+
+            // 現在ログイン中のユーザーで絞り込み
+            logs = allLogs.filter(log => log.username === currentUser);
+
+            // ログが一件もない場合、サンプルデータを現在ユーザー名で登録
+            if (logs.length === 0 && currentUser === 'sotakanagami') {
+                const samples = getSampleData();
+                samples.forEach(s => s.username = currentUser);
+                logs = samples;
+                
+                // 元の全ログデータベースにサンプルをマージして保存
+                allLogs = allLogs.concat(samples);
+                StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
+            }
+
+            logs.sort((a, b) => new Date(b.date) - new Date(a.date));
             renderLogList();
             updateStats();
+
             if (logs.length > 0) {
                 selectLog(logs[0].id);
             } else {
@@ -1220,7 +1392,7 @@
             }
         }
 
-        // サンプルデータ
+        // サンプルデータ生成
         function getSampleData() {
             return [
                 {
@@ -1266,57 +1438,7 @@
             ];
         }
 
-        // 統計更新
-        function updateStats() {
-            document.getElementById('stat-count').innerText = logs.length;
-            if (logs.length > 0) {
-                const totalWind = logs.reduce((sum, log) => sum + parseInt(log.wind || 0), 0);
-                const avgWind = (totalWind / logs.length).toFixed(1);
-                document.getElementById('stat-hours').innerText = avgWind + 'm';
-            } else {
-                document.getElementById('stat-hours').innerText = '0m';
-            }
-        }
-
-        // リスト描画
-        function renderLogList() {
-            const container = document.getElementById('log-items-container');
-            container.innerHTML = '';
-
-            if (logs.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding:20px; font-size:12px; color:var(--text-muted);">ログがありません</div>`;
-                return;
-            }
-
-            logs.forEach(log => {
-                const card = document.createElement('div');
-                card.className = `log-item-card ${log.id === activeLogId ? 'active' : ''}`;
-                card.onclick = () => selectLog(log.id);
-
-                const isTechno = log.discipline === 'テクノ293';
-                const tagClass = isTechno ? 'tag-techno' : 'tag-foil';
-                const tagText = isTechno ? 'TECHNO' : 'FOIL';
-
-                card.innerHTML = `
-                    <div class="log-item-meta">
-                        <span>${log.date || ''}</span>
-                        <span>${log.location || ''}</span>
-                    </div>
-                    <div class="log-item-title">
-                        <span class="log-item-tag ${tagClass}">${tagText}</span>
-                        ${log.discipline || 'その他'}
-                    </div>
-                    <div class="log-item-wind">
-                        <!-- Inline SVG for wind -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
-                        <span>風速 ${log.wind || 0} m/s</span>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // 詳細画面描画
+        // 詳細表示
         function selectLog(id) {
             activeLogId = id;
             renderLogList();
@@ -1324,7 +1446,6 @@
             const log = logs.find(l => l.id === id);
             if (!log) return;
 
-            // ネクストアクション看板の更新
             const banner = document.getElementById('banner-action');
             const bannerText = document.getElementById('banner-action-text');
             if (log.nextAction) {
@@ -1336,7 +1457,6 @@
 
             const isTechno = log.discipline === 'テクノ293';
 
-            // ギアリスト
             let gearHtml = '';
             if (isTechno) {
                 const battens = log.battens || ['90°', '90°', '90°', '90°', '90°', '90°'];
@@ -1401,7 +1521,6 @@
                 `;
             }
 
-            // レースレポート
             let racesHtml = '';
             if (log.races && log.races.length > 0) {
                 let listHtml = '';
@@ -1427,7 +1546,6 @@
                 racesHtml = `
                     <div class="detail-section" style="grid-column: span 2; margin-top: 10px;">
                         <h3 class="section-title" style="color: var(--accent); margin-bottom:12px;">
-                            <!-- Inline SVG for flag -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flag" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
                             🏁 ラウンディング（レース練習）レポート
                         </h3>
@@ -1445,26 +1563,21 @@
                         <h2 class="detail-title">${log.discipline || 'その他'}</h2>
                         <div class="detail-date-loc">
                             <span style="display:flex; align-items:center; gap:6px;">
-                                <!-- Inline SVG for calendar -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                                 ${log.date || ''}
                             </span>
                             <span style="display:flex; align-items:center; gap:6px;">
-                                <!-- Inline SVG for map-pin -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                 ${log.location || ''}
                             </span>
                         </div>
                     </div>
                     <div class="detail-actions">
-                        <!-- 編集ボタンの追加 -->
                         <button class="btn-new-log" style="padding: 8px 16px; background: var(--primary-gradient); box-shadow: none; font-size:13px;" onclick="editLog('${log.id}')">
-                            <!-- Inline SVG for edit -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-edit-2" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
                             編集
                         </button>
                         <button class="btn-delete" onclick="deleteLog('${log.id}')">
-                            <!-- Inline SVG for trash-2 -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                             削除
                         </button>
@@ -1472,32 +1585,26 @@
                 </div>
 
                 <div class="detail-grid">
-                    <!-- 左カラム: コンディションとギア設定 -->
                     <div class="detail-grid-col" style="display:flex; flex-direction:column; gap:20px;">
                         <div class="detail-section">
                             <h3 class="section-title">
-                                <!-- Inline SVG for cloud-lightning -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-lightning"><path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 8.58"/><polyline points="13 11 9 17 12 17 9 23"/></svg>
                                 コンディション
                             </h3>
                             <div class="condition-pills">
                                 <div class="pill">
-                                    <!-- Inline SVG for wind -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wind"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
                                     風速: ${log.wind || 0} m/s
                                 </div>
                                 <div class="pill">
-                                    <!-- Inline SVG for compass -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
                                     風向: ${log.windDir || '未入力'}
                                 </div>
                                 <div class="pill">
-                                    <!-- Inline SVG for activity -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                                     海面: ${log.sea || 'フラット海面'}
                                 </div>
                                 <div class="pill">
-                                    <!-- Inline SVG for sun -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                                     天気: ${log.weather || '晴れ'}
                                 </div>
@@ -1506,7 +1613,6 @@
 
                         <div class="detail-section">
                             <h3 class="section-title" style="color: ${isTechno ? 'var(--orange)' : 'var(--primary)'};">
-                                <!-- Inline SVG for sliders -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/></svg>
                                 ギアセッティング
                             </h3>
@@ -1516,11 +1622,9 @@
                         </div>
                     </div>
 
-                    <!-- 右カラム: 練習ログとAIアクション案 -->
                     <div class="detail-grid-col" style="display:flex; flex-direction:column; gap:20px;">
                         <div class="detail-section">
                             <h3 class="section-title">
-                                <!-- Inline SVG for book-open -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                                 練習ログ・気づき
                             </h3>
@@ -1529,7 +1633,6 @@
 
                         <div class="detail-section">
                             <h3 class="section-title" style="color: var(--danger);">
-                                <!-- Inline SVG for alert-circle -->
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-circle"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                                 本日の課題
                             </h3>
@@ -1539,7 +1642,6 @@
                         ${log.nextAction ? `
                             <div class="ai-action-panel">
                                 <div class="ai-title">
-                                    <!-- Inline SVG for sparkles -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M12 3v16M19 12H5M12 3l4 4M12 19l-4-4M19 12l-4 4M5 12l4-4"/></svg>
                                     AI ネクストアクション提案
                                 </div>
@@ -1551,7 +1653,6 @@
                         ` : ''}
                     </div>
 
-                    <!-- 下部全幅: ラウンディングレポート -->
                     ${racesHtml}
                 </div>
             `;
@@ -1562,18 +1663,17 @@
             document.getElementById('detail-panel').innerHTML = `
                 <div class="empty-state">
                     <div class="empty-icon">
-                        <!-- Inline SVG for book-open -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                     </div>
                     <div>
-                        <h3 style="color: white; margin-bottom: 8px;">ログが選択されていません</h3>
+                        <h3 style="color: white; margin-bottom: 8px;">ログが登録されていません</h3>
                         <p style="font-size: 14px;">右上の「練習ノートを書く」から新しいログを作成してください。</p>
                     </div>
                 </div>
             `;
         }
 
-        // 保存および編集更新ロジック
+        // 保存ロジック（新規作成 ＆ 編集更新）
         function saveLog() {
             const date = document.getElementById('form-date').value;
             const location = document.getElementById('form-location').value;
@@ -1591,15 +1691,27 @@
                 return;
             }
 
-            // 新規作成か編集判定
-            let targetLog;
-            if (isEditing && editingLogId) {
-                targetLog = logs.find(l => l.id === editingLogId);
-            } else {
-                targetLog = { id: 'log-' + Date.now() };
+            // データベース（全ログ）の読み込み
+            const data = StorageHelper.getItem(STORAGE_KEY);
+            let allLogs = [];
+            if (data) {
+                try { allLogs = JSON.parse(data); } catch(e) {}
             }
 
-            // 基本データの充填
+            let targetLog;
+            if (isEditing && editingLogId) {
+                targetLog = allLogs.find(l => l.id === editingLogId);
+                if (!targetLog) {
+                    targetLog = { id: editingLogId };
+                    allLogs.push(targetLog);
+                }
+            } else {
+                targetLog = { id: 'log-' + Date.now() };
+                allLogs.push(targetLog);
+            }
+
+            // 値のセット
+            targetLog.username = currentUser; // ユーザー紐付け！
             targetLog.date = date;
             targetLog.location = location;
             targetLog.discipline = discipline;
@@ -1611,7 +1723,7 @@
             targetLog.feeling = feeling;
             targetLog.issue = issue;
 
-            // レースレポートデータの更新
+            // レースデータ
             const raceBlocks = document.querySelectorAll('.form-race-block');
             const races = [];
             raceBlocks.forEach(block => {
@@ -1623,13 +1735,12 @@
             });
             targetLog.races = races;
 
-            // 種目による分岐保存 ＆ AIアドバイス再生成（編集時にも対応！）
+            // 道具別
             if (discipline === 'テクノ293') {
                 targetLog.ext = document.getElementById('form-techno-ext').value;
                 targetLog.down = document.getElementById('form-techno-down').value;
                 targetLog.pin = document.getElementById('form-techno-pin').value;
                 targetLog.out = document.getElementById('form-techno-out').value;
-                
                 targetLog.battens = [
                     document.getElementById('form-techno-batten-1').value,
                     document.getElementById('form-techno-batten-2').value,
@@ -1638,28 +1749,22 @@
                     document.getElementById('form-techno-batten-5').value,
                     document.getElementById('form-techno-batten-6').value
                 ];
-                
                 targetLog.tracker = document.getElementById('form-techno-tracker').value;
                 targetLog.boom = document.getElementById('form-techno-boom').value;
                 targetLog.other = document.getElementById('form-techno-other').value;
                 
-                // AIアドバイスの再生成
+                // AIアドバイスの自動再生成・更新
                 targetLog.nextAction = generateTechnoNextAction(issue, wind);
             } else {
                 targetLog.mast = document.getElementById('form-foil-mast').value;
                 targetLog.stabilizer = document.getElementById('form-foil-stabilizer').value;
                 targetLog.shim = document.getElementById('form-foil-shim').value;
                 
-                // AIアドバイスの再生成
+                // AIアドバイスの自動再生成・更新
                 targetLog.nextAction = generateFoilNextAction(issue, wind);
             }
 
-            // 新規作成時のみ配列に挿入
-            if (!isEditing) {
-                logs.push(targetLog);
-            }
-
-            StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logs));
+            StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
             
             closeModal();
             loadLogs();
@@ -1671,10 +1776,8 @@
             const text = issue.toLowerCase();
             const w = parseInt(wind);
 
-            // ① 上り（クローズホールド / 角度 / 横流れ）
             if (text.includes('上り') || text.includes('角度') || text.includes('クローズ')) {
                 if (w <= 5) {
-                    // 微風時の上り
                     return {
                         title: 'テクノ293：微風上りのレイルヒール制御 ＆ 接水長最大化',
                         detail: `微風時（${w}m/s）の上りレグで、横流れ（リーウェイ）を防ぎスピードを最大化するアジャストです。
@@ -1691,7 +1794,6 @@
                         </ul>`
                     };
                 } else if (w >= 10) {
-                    // 強風時の上り
                     return {
                         title: 'テクノ293：強風クローズのセイルツイスト ＆ フラット維持',
                         detail: `強風時（${w}m/s）のオーバーパワーをいなし、上りのコース角度を安定させる高度アジャストです。
@@ -1708,7 +1810,6 @@
                         </ul>`
                     };
                 } else {
-                    // 中風時の上り
                     return {
                         title: 'テクノ293：中風クローズのフィン揚力獲得 ＆ ハーネストリム',
                         detail: `中風域（${w}m/s）でのプレーニング移行期における、角度とスピードの両立アジャストです。
@@ -1723,10 +1824,8 @@
                 }
             }
 
-            // ② 下り（ランニング / プレーニング / ベア）
             if (text.includes('下り') || text.includes('ランニング') || text.includes('プレーニング') || text.includes('ベア')) {
                 if (w >= 10) {
-                    // 強風時の下り
                     return {
                         title: 'テクノ293：強風ダウンウインドでのベアリングアウェイ ＆ 後方荷重',
                         detail: `強風時（${w}m/s）の下りレグで、ノーズ刺さりを防ぎつつ最高速まで加速するコントロールです。
@@ -1741,7 +1840,6 @@
                         </ul>`
                     };
                 } else {
-                    // 微風・中風時の下り
                     return {
                         title: 'テクノ293：軽風下りレグのドラッグ最小化 ＆ ロケットパンプ',
                         detail: `アンダーコンディション（${w}m/s）の下りで、水流抵抗（ドラッグ）を極限まで減らし早期プレーニングさせるアジャストです。
@@ -1749,7 +1847,7 @@
                             <li><strong>【マストトラッカーのペダル操作】</strong>:
                                 <br>アビームから下りに入る瞬間にトラッカーを<strong>「後 (Back)」</strong>に切り替え、水面との接水面積を最小限に抑えます。
                             </li>
-                            <li><strong>【ダガーボード収納の確認】</strong>:
+                            <li><strong>【ダガーボード収納 of 確認】</strong>:
                                 <br>ダガーは1cmの隙間もなく「100%完全収納」にアジャストしてください。数センチでも出ていると、猛烈な渦流ドラッグを引き起こして失速します。
                             </li>
                             <li><strong>【フィン揚力パンピング】</strong>:
@@ -1760,7 +1858,6 @@
                 }
             }
 
-            // ③ ジャイブ・回航の悩み
             if (text.includes('ジャイブ') || text.includes('回航')) {
                 return {
                     title: 'テクノ293：ハイスピード・レイルステアジャイブ ＆ トラッカー連動',
@@ -1772,12 +1869,11 @@
                         <li><strong>【ジャイブ中のマストトラッカー操作】</strong>:
                             <br>ターン後半（セイル返し直前）に、足元のペダル操作でマストトラッカーを<strong>「中 (Middle)」または「前 (Forward)」</strong>に戻す準備をします。立ち上がり後にスムーズに上り角度をキープするための一連の流れを動作パターン化します。
                         </li>
-                        <li><strong>【セイル反転時のトリムバランス】</strong>: 風下（デッドラン）に向いた瞬間、セイルの風圧が一瞬ニュートラルになるため、すかさずブームを持つ手を前に滑らせて低重心のまま反転させ、ブローを膝で吸収します。</li>
+                        <li><strong>【セイル反転時のトリムバランス】</strong>: 風下に向いた瞬間、セイルの風圧が一瞬ニュートラルになるため、すかさずブームを持つ手を前に滑らせて低重心のまま反転させ、ブローを膝で吸収します。</li>
                     </ul>`
                 };
             }
 
-            // ④ その他・汎用アドバイス
             return {
                 title: 'テクノ293：微風から強風までのトリムトランジション',
                 detail: `コンディションに応じた、マストトラッカーおよびトリム調整の連動チェックリストです。
@@ -1802,7 +1898,7 @@
             if (text.includes('ジャイブ') || text.includes('jibe') || text.includes('刺さる') || text.includes('失速') || text.includes('沈')) {
                 return {
                     title: 'フォイル：ジャイブ進入時のノーズキープ ＆ 荷重アジャスト',
-                    detail: `ジャイブ時の失速・刺さりを改善するために次回以下を検証します。
+                    detail: `ジャイブ時の失速・刺さりを改善するために次回以下を検証します.
                     <ul>
                         <li><strong>A/Bテスト案</strong>:
                             <br>【A】マストベースを5mm前に出して、ジャイブ進入時のボード前方への傾きを抑制.
@@ -1816,7 +1912,7 @@
             if (text.includes('足') || text.includes('痛') || text.includes('プレッシャー') || text.includes('暴れる')) {
                 return {
                     title: 'フォイル：ニュートラル垂直荷重へのアジャスト ＆ マスト前傾検証',
-                    detail: `足裏の痛みやオーバーパワーでの制御不能を改善するための次回アクションです。
+                    detail: `足裏の痛みやオーバーパワーでの制御不能を改善するための次回アクションです.
                     <ul>
                         <li><strong>A/Bテスト案</strong>:
                             <br>【A】マストベースを「5mm前」にして、フォイルの初期アタックアングルを抑え、足にかかる負担を減らす.
@@ -1846,7 +1942,7 @@
                 detail: `次回の練習で課題を克服するための「Fact-Hypothesis-Action」検証ループ案です.
                 <ul>
                     <li><strong>ステップ1（Fact）</strong>: 発生した課題が「どの風域」「どのコース」で最も強く出たかを記録します.</li>
-                    <li><strong>ステップ2（Hypothesis）</strong>: 課題がリフト過多なら「マスト前 / シム薄」、リフト不足なら「マスト後 / シム厚()」という対照仮説を立てます.</li>
+                    <li><strong>ステップ2（Hypothesis）</strong>: 課題がリフト過多なら「マスト前 / シム薄浮」、リフト不足なら「マスト後 / シム厚()」という対照仮説を立てます.</li>
                     <li><strong>ステップ3（Action）</strong>: 次回の練習開始時に、マスト位置かシムアングルを調整し、前後の走りの変化を比較します.</li>
                 </ul>`
             };
@@ -1855,8 +1951,13 @@
         // ログの削除
         function deleteLog(id) {
             if (confirm('この練習ノートを削除しますか？')) {
-                logs = logs.filter(l => l.id !== id);
-                StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logs));
+                const data = StorageHelper.getItem(STORAGE_KEY);
+                let allLogs = [];
+                if (data) {
+                    try { allLogs = JSON.parse(data); } catch(e) {}
+                }
+                allLogs = allLogs.filter(l => l.id !== id);
+                StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
                 loadLogs();
             }
         }
