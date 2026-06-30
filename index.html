@@ -937,7 +937,7 @@
                 </div>
                 <div>
                     <span class="logo-text">GrowLog Windsurf</span>
-                    <span class="logo-tag">PROTOTYPE V4.9</span>
+                    <span class="logo-tag">PROTOTYPE V4.10</span>
                 </div>
             </div>
             
@@ -1338,7 +1338,7 @@
                     </div>
                 </div>
 
-                <!-- レースレポート -->
+                <!-- 🏁 レースレポート -->
                 <h4 style="font-size: 14px; color: var(--primary); margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
                     <span>🏁 ラウンディング（レース練習）レポート</span>
                     <button type="button" class="btn-new-log" style="padding: 4px 12px; font-size: 11px; background: var(--accent-gradient); box-shadow: none;" onclick="addRaceForm()">
@@ -1447,7 +1447,7 @@
                 try { users = JSON.parse(data); } catch (e) {}
             }
             
-            let adminUser = users.find(u => u.username === 'sotakanagami');
+            let adminUser = users.find(u => u.username.toLowerCase() === 'sotakanagami');
             if (!adminUser) {
                 adminUser = {
                     username: 'sotakanagami',
@@ -1468,7 +1468,7 @@
             if (session) {
                 currentUser = session;
                 
-                if (currentUser === 'sotakanagami') {
+                if (currentUser.toLowerCase() === 'sotakanagami') {
                     showAdminDashboard();
                 } else {
                     showAppScreen();
@@ -1493,7 +1493,7 @@
             document.getElementById('header-username').innerText = currentUser;
             
             const backBtn = document.getElementById('btn-back-to-admin');
-            if (currentUser === 'sotakanagami') {
+            if (currentUser.toLowerCase() === 'sotakanagami') {
                 backBtn.style.display = 'inline-flex';
             } else {
                 backBtn.style.display = 'none';
@@ -1550,9 +1550,9 @@
             }
         }
 
-        // 一般ログイン処理
+        // 👑 一般ログイン処理（大文字・小文字の区別をなくすよう修正）
         function handleLogin() {
-            const userIn = document.getElementById('login-username').value.trim();
+            const userIn = document.getElementById('login-username').value.trim().toLowerCase();
             const passIn = document.getElementById('login-password').value.trim();
 
             if (!userIn || !passIn) {
@@ -1571,14 +1571,15 @@
                 try { users = JSON.parse(data); } catch(e) {}
             }
 
-            const user = users.find(u => u.username === userIn && u.password === passIn);
+            // 大文字小文字の区別をなくして照合
+            const user = users.find(u => u.username.toLowerCase() === userIn && u.password === passIn);
             if (user) {
                 if (user.status !== 'approved') {
                     alert('申請中のアカウントです。ログインするには管理者（金上颯大）の承認が必要です。');
                     return;
                 }
 
-                currentUser = user.username;
+                currentUser = user.username; // 登録された名前を使用
                 StorageHelper.setItem(SESSION_KEY, currentUser);
                 showAppScreen();
                 loadLogs();
@@ -1606,7 +1607,7 @@
                     try { users = JSON.parse(data); } catch(e) {}
                 }
                 
-                let adminUser = users.find(u => u.username === 'sotakanagami');
+                let adminUser = users.find(u => u.username.toLowerCase() === 'sotakanagami');
                 if (adminUser) {
                     adminUser.status = 'approved';
                     adminUser.password = 'sota0016';
@@ -1626,7 +1627,7 @@
             }
         }
 
-        // 新規アカウント申請送信
+        // 新規アカウント申請送信（大文字・小文字の区別をなくすよう修正）
         function handleSignup() {
             const userIn = document.getElementById('signup-username').value.trim();
             const passIn = document.getElementById('signup-password').value.trim();
@@ -1649,13 +1650,15 @@
                 try { users = JSON.parse(data); } catch(e) {}
             }
 
-            if (users.some(u => u.username === userIn)) {
+            // 大文字小文字の区別を無視して重複チェック
+            const cleanUsername = userIn.toLowerCase();
+            if (users.some(u => u.username.toLowerCase() === cleanUsername)) {
                 alert('このユーザー名はすでに使用されています。');
                 return;
             }
 
             users.push({
-                username: userIn,
+                username: userIn, // 表示用はオリジナルの大文字交じりを維持
                 password: passIn,
                 status: 'pending'
             });
@@ -1701,7 +1704,7 @@
             }
         }
 
-        // 👑 管理者画面：新規申請一覧および登録済みユーザー一覧の並列表示
+        // 👑 管理者画面：新規申請一覧および登録済みユーザー一覧の並列表示（toLowerCaseで安全化）
         function renderAdminUsers() {
             const pendingTbody = document.getElementById('admin-pending-users-tbody');
             const approvedTbody = document.getElementById('admin-approved-users-tbody');
@@ -1716,9 +1719,9 @@
             }
 
             const pendingUsers = users.filter(u => u.status === 'pending');
-            const approvedUsers = users.filter(u => u.status === 'approved' || u.username === 'sotakanagami');
+            const approvedUsers = users.filter(u => u.status === 'approved' || u.username.toLowerCase() === 'sotakanagami');
 
-            // 1. 新規アカウント申請フォーム（承認待ち）の描画
+            // 1. 新規アカウント作成申請（申請フォーム一覧）の描画
             if (pendingUsers.length === 0) {
                 pendingTbody.innerHTML = `
                     <tr>
@@ -1749,7 +1752,7 @@
             // 2. 登録済みユーザー一覧（利用可能）の描画
             approvedUsers.forEach(user => {
                 const tr = document.createElement('tr');
-                const isAdmin = user.username === 'sotakanagami';
+                const isAdmin = user.username.toLowerCase() === 'sotakanagami';
 
                 let roleHtml = isAdmin
                     ? `<span class="status-badge approved" style="background:rgba(139, 92, 246, 0.15); color:var(--admin-purple);">👑 管理者</span>`
@@ -1768,7 +1771,24 @@
             });
         }
 
-        // 新規申請の拒否（却下・アカウント申請データ破棄）
+        // 新規申請の承認
+        function adminApproveUser(username) {
+            const data = StorageHelper.getItem(USERS_KEY);
+            let users = [];
+            if (data) {
+                try { users = JSON.parse(data); } catch(e) {}
+            }
+
+            const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+            if (user) {
+                user.status = 'approved';
+                StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
+                alert(`@${username} のアカウントを承認しました。`);
+                renderAdminUsers();
+            }
+        }
+
+        // 新規申請の拒否
         function adminRejectUser(username) {
             if (confirm(`@${username} からのアカウント作成申請を【拒否】しますか？\n申請データは削除されます。`)) {
                 const data = StorageHelper.getItem(USERS_KEY);
@@ -1776,7 +1796,7 @@
                 if (data) {
                     try { users = JSON.parse(data); } catch(e) {}
                 }
-                users = users.filter(u => u.username !== username);
+                users = users.filter(u => u.username.toLowerCase() !== username.toLowerCase());
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
 
                 alert(`@${username} の申請を却下しました。`);
@@ -1835,24 +1855,7 @@
             alert(`新規登録用の承認パスコードを「${val}」に変更しました。`);
         }
 
-        // ユーザー承認
-        function adminApproveUser(username) {
-            const data = StorageHelper.getItem(USERS_KEY);
-            let users = [];
-            if (data) {
-                try { users = JSON.parse(data); } catch(e) {}
-            }
-
-            const user = users.find(u => u.username === username);
-            if (user) {
-                user.status = 'approved';
-                StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
-                alert(`@${username} のアカウントを承認しました。`);
-                renderAdminUsers();
-            }
-        }
-
-        // ユーザー削除
+        // 登録済みユーザー削除（toLowerCaseで安全化）
         function adminDeleteUser(username) {
             if (confirm(`@${username} を削除しますか？\nこの操作は取り消せません。該当ユーザーの練習データも同時に削除されます。`)) {
                 const uData = StorageHelper.getItem(USERS_KEY);
@@ -1860,7 +1863,7 @@
                 if (uData) {
                     try { users = JSON.parse(uData); } catch(e) {}
                 }
-                users = users.filter(u => u.username !== username);
+                users = users.filter(u => u.username.toLowerCase() !== username.toLowerCase());
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
 
                 const lData = StorageHelper.getItem(STORAGE_KEY);
@@ -1868,7 +1871,7 @@
                 if (lData) {
                     try { logsAll = JSON.parse(lData); } catch(e) {}
                 }
-                logsAll = logsAll.filter(l => l.username !== username);
+                logsAll = logsAll.filter(l => l.username.toLowerCase() !== username.toLowerCase());
                 StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logsAll));
 
                 alert(`@${username} のアカウントと練習ノートをすべて削除しました。`);
@@ -2108,9 +2111,9 @@
                 try { allLogs = JSON.parse(data); } catch(e) {}
             }
 
-            let myLogs = allLogs.filter(log => log.username === currentUser);
+            let myLogs = allLogs.filter(log => log.username.toLowerCase() === currentUser.toLowerCase());
 
-            if (myLogs.length === 0 && currentUser === 'sotakanagami') {
+            if (myLogs.length === 0 && currentUser.toLowerCase() === 'sotakanagami') {
                 const samples = getSampleData();
                 samples.forEach(s => s.username = currentUser);
                 myLogs = samples;
@@ -2158,7 +2161,7 @@
                     boom: '胸の高さ',
                     other: 'ハーネスライン28インチ',
                     feeling: '風速3〜5mのアンダーコンディション。国大の学生たちと合同で上り下りのレース練習を行う。微風時にダガーを出した状態での上りのスピードが学生たちに伸び悩んでいる様子。',
-                    issue: 'クローズホールド（上り）で角度が取れず、下りのレグで他の艇に抜かれてしまう。パンピングの持続力足りない。',
+                    issue: 'クローズホールド（上り）で角度が取れず、下りのレグで他の艇に抜かれてしまう。パンピングの持続力が足りない。',
                     races: [
                         { rank: '2位 / 12艇中', start: '上3からジャストスタート。', memo: '上りのスピード・角度はまずまず。ダガーを完璧に垂直に下ろした。下りでダガーの収納が少し遅れ、アビームで抜かれて2位。' },
                         { rank: '4位 / 12艇中', start: '少し遅れて2列目から。', memo: 'スタートミスで悪い風を受けた。下りのパンピングで追い上げたが順位は4位まで。パンピングの落とし込みがまだ甘い。' }
@@ -2580,12 +2583,12 @@
             if (usersData) {
                 try {
                     const parsedUsers = JSON.parse(usersData);
-                    approvedUsers = parsedUsers.filter(u => u.status === 'approved').map(u => u.username);
+                    approvedUsers = parsedUsers.filter(u => u.status === 'approved').map(u => u.username.toLowerCase());
                 } catch(e) {}
             }
 
             let displayLogs = allLogs.filter(log => {
-                const isApproved = approvedUsers.includes(log.username);
+                const isApproved = approvedUsers.includes(log.username.toLowerCase());
                 if (!isApproved) return false;
 
                 if (globalCategory === 'ALL') return true;
@@ -2700,12 +2703,12 @@
             if (usersData) {
                 try {
                     const parsedUsers = JSON.parse(usersData);
-                    approvedUsers = parsedUsers.filter(u => u.status === 'approved').map(u => u.username);
+                    approvedUsers = parsedUsers.filter(u => u.status === 'approved').map(u => u.username.toLowerCase());
                 } catch(e) {}
             }
 
             let filtered = allLogs.filter(log => {
-                const isApproved = approvedUsers.includes(log.username);
+                const isApproved = approvedUsers.includes(log.username.toLowerCase());
                 if (!isApproved) return false;
 
                 let matchesGlobal = true;
@@ -2892,7 +2895,7 @@
                     detail: `ジャイブ時の失速を防ぎ、プレーニングを維持したまま立ち上がる高度なジャイブ技術です。
                     <ul>
                         <li><strong>【レイルステア（足裏ワーク）】</strong>:
-                            <br>ジャイブ進入時、内側の足の親指の付け根（レイル上）に重心を深く落とし込み、ボードのレイル全体を水に噛ませてターンを描きます。急激な踏み込みによる水流剥離（失速）を防ぐため、スムーズな重心移動を行います。
+                            <br>ジャイブ進入時, 内側の足の親指の付け根（レイル上）に重心を深く落とし込み、ボードのレイル全体を水に噛ませてターンを描きます。急激な踏み込みによる水流剥離（失速）を防ぐため、スムーズな重心移動を行います。
                         </li>
                         <li><strong>【ジャブ中のマストトラッカー操作】</strong>:
                             <br>ターン後半（セイル返し直前）に、足元のペダル操作でマストトラッカーを<strong>「中 (Middle)」または「前 (Forward)」</strong>に戻す準備をします。立ち上がり後にスムーズに上り角度をキープするための一連の流れを動作パターン化します。
@@ -2912,7 +2915,7 @@
                     </li>
                     <li><strong>2. ダウンウインド（下り）</strong>: 
                         <br>・共通：トラッカー「後」、ダガー完全収納。
-                        <br>・強風時：アウト引き、ブロー進入時の積極的なベア、後方レッグプレス。
+                        <br>· 強風時：アウト引き、ブロー進入時の積極的なベア、後方レッグプレス。
                     </li>
                 </ul>`
             };
