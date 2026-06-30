@@ -681,7 +681,7 @@
             </div>
             <div>
                 <span class="logo-text">GrowLog</span>
-                <span class="logo-tag">PROTOTYPE V3.3</span>
+                <span class="logo-tag">PROTOTYPE V4.0</span>
             </div>
         </div>
         <button class="btn-new-log" onclick="openModal()">
@@ -753,7 +753,7 @@
         </div>
     </main>
 
-    <!-- 新規登録用モーダル -->
+    <!-- 新規登録・編集用モーダル -->
     <div class="modal" id="log-modal">
         <div class="modal-container">
             <div class="modal-header">
@@ -823,7 +823,7 @@
                     </div>
                 </div>
 
-                <!-- 道具設定（フォイル用とテクノ用で動的に分ける） -->
+                <!-- 道具設定 -->
                 <h4 style="font-size: 14px; color: var(--primary); margin-top: 10px;">ギアセッティング</h4>
                 
                 <!-- 共通項目：セイル -->
@@ -896,7 +896,7 @@
                         </div>
                     </div>
 
-                    <!-- テクノ：マストトラッカー位置（3ポジション）の追加 -->
+                    <!-- マストトラッカー位置 -->
                     <div class="form-row">
                         <div class="form-group">
                             <label for="form-techno-tracker">マストトラッカー位置</label>
@@ -968,7 +968,7 @@
 
     <!-- JavaScriptロジック -->
     <script>
-        // 安全なローカルストレージのヘルパークラス（SecurityErrorを防止し、100%の動作を保証）
+        // 安全なローカルストレージのヘルパークラス
         const StorageHelper = {
             memoryStorage: {},
 
@@ -979,7 +979,7 @@
                     localStorage.removeItem(testKey);
                     return true;
                 } catch (e) {
-                    return false; // file:// スキーマやプライベートモードでのエラーを検知
+                    return false;
                 }
             },
 
@@ -1007,11 +1007,13 @@
             }
         };
 
-        // 新スキーマ対応のストレージキー（v3.3 - マストトラッカー追加版）
-        const STORAGE_KEY = 'growlog_records_v3_3';
+        // 新仕様v4.0（編集対応 & AI再生成機能）
+        const STORAGE_KEY = 'growlog_records_v4_0';
         let logs = [];
         let activeLogId = null;
         let raceCount = 0;
+        let isEditing = false;       // 編集モードフラグ
+        let editingLogId = null;     // 編集中のログID
 
         // 初期化
         window.addEventListener('DOMContentLoaded', () => {
@@ -1047,12 +1049,13 @@
             document.getElementById('wind-val-display').innerText = val + ' m';
         }
 
-        // モーダル開閉
+        // モーダル開閉（新規作成）
         function openModal() {
+            isEditing = false;
+            editingLogId = null;
+            document.querySelector('.modal-title').innerText = '新規練習ノート作成';
+            resetForm();
             document.getElementById('log-modal').classList.add('open');
-            document.getElementById('form-date').valueAsDate = new Date();
-            document.getElementById('form-discipline').value = 'テクノ293';
-            toggleDisciplineFields('テクノ293');
         }
 
         function closeModal() {
@@ -1061,14 +1064,78 @@
         }
 
         function resetForm() {
+            document.getElementById('form-date').valueAsDate = new Date();
             document.getElementById('form-location').value = '';
-            document.getElementById('form-feeling').value = '';
-            document.getElementById('form-issue').value = '';
+            document.getElementById('form-discipline').value = 'テクノ293';
+            toggleDisciplineFields('テクノ293');
             document.getElementById('form-wind').value = 8;
             document.getElementById('form-wind-dir').value = '南西';
+            document.getElementById('form-feeling').value = '';
+            document.getElementById('form-issue').value = '';
             document.getElementById('form-race-container').innerHTML = '';
             raceCount = 0;
             updateWindValue(8);
+        }
+
+        // 既存ログの編集モーダル展開
+        function editLog(id) {
+            const log = logs.find(l => l.id === id);
+            if (!log) return;
+
+            isEditing = true;
+            editingLogId = id;
+
+            // モーダルタイトルを編集に変更
+            document.querySelector('.modal-title').innerText = '練習ノートの編集';
+
+            // 各フォームに現在のデータを充填
+            document.getElementById('form-date').value = log.date;
+            document.getElementById('form-location').value = log.location;
+            document.getElementById('form-discipline').value = log.discipline;
+            document.getElementById('form-wind').value = log.wind;
+            updateWindValue(log.wind);
+            document.getElementById('form-wind-dir').value = log.windDir || '南西';
+            document.getElementById('form-sea').value = log.sea || 'フラット海面';
+            document.getElementById('form-weather').value = log.weather || '晴れ';
+            document.getElementById('form-sail').value = log.sail || '7.8';
+            document.getElementById('form-feeling').value = log.feeling || '';
+            document.getElementById('form-issue').value = log.issue || '';
+
+            toggleDisciplineFields(log.discipline);
+
+            // ギア値の復元
+            if (log.discipline === 'テクノ293') {
+                document.getElementById('form-techno-ext').value = log.ext || '26';
+                document.getElementById('form-techno-down').value = log.down || 'ベタ引き';
+                document.getElementById('form-techno-pin').value = log.pin || '6';
+                document.getElementById('form-techno-out').value = log.out || 'ニュートラル';
+                
+                const battens = log.battens || ['90°', '90°', '90°', '90°', '90°', '90°'];
+                for (let i = 1; i <= 6; i++) {
+                    document.getElementById(`form-techno-batten-${i}`).value = battens[i-1] || '90°';
+                }
+                
+                document.getElementById('form-techno-tracker').value = log.tracker || '中 (Middle)';
+                document.getElementById('form-techno-boom').value = log.boom || '胸の高さ';
+                document.getElementById('form-techno-other').value = log.other || 'なし';
+            } else {
+                document.getElementById('form-foil-mast').value = log.mast || '155';
+                document.getElementById('form-foil-stabilizer').value = log.stabilizer || '140';
+                document.getElementById('form-foil-shim').value = log.shim || '2.0';
+            }
+
+            // レースレポートフォームの動的構築
+            const raceContainer = document.getElementById('form-race-container');
+            raceContainer.innerHTML = '';
+            raceCount = 0;
+            if (log.races && log.races.length > 0) {
+                log.races.forEach(race => {
+                    addRaceForm(race);
+                });
+            }
+
+            // モーダルオープン
+            document.getElementById('log-modal').classList.add('open');
         }
 
         // 動的なレースフォームブロックの追加
@@ -1084,7 +1151,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px;">
                     <span style="font-size: 12px; font-weight: bold; color: var(--primary);">Race ${raceCount}</span>
                     <button type="button" style="background:none; border:none; color:var(--danger); cursor:pointer;" onclick="removeRaceForm(${raceCount})">
-                        <!-- Inline SVG for trash-2 -->
+                        <!-- Inline SVG for trash -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                     </button>
                 </div>
@@ -1106,7 +1173,6 @@
             container.appendChild(raceDiv);
         }
 
-        // レースフォームブロックの削除
         function removeRaceForm(id) {
             const block = document.getElementById(`form-race-block-${id}`);
             if (block) {
@@ -1115,7 +1181,6 @@
             }
         }
 
-        // レース番号のリインデックス
         function reindexRaces() {
             const blocks = document.querySelectorAll('.form-race-block');
             raceCount = 0;
@@ -1131,7 +1196,7 @@
             });
         }
 
-        // ローカルストレージから読み込み（StorageHelperを使用）
+        // ローカルストレージから読み込み
         function loadLogs() {
             const data = StorageHelper.getItem(STORAGE_KEY);
             if (data) {
@@ -1155,11 +1220,11 @@
             }
         }
 
-        // サンプルデータの作成
+        // サンプルデータ
         function getSampleData() {
             return [
                 {
-                    id: 'sample-techno-v3-3',
+                    id: 'sample-techno-v4',
                     date: '2026-06-30',
                     location: '鎌倉・材木座',
                     discipline: 'テクノ293',
@@ -1183,18 +1248,17 @@
                         { rank: '4位 / 12艇中', start: '少し遅れて2列目から。', memo: 'スタートミスで悪い風を受けた。下りのパンピングで追い上げたが順位は4位まで。パンピングの落とし込みがまだ甘い。' }
                     ],
                     nextAction: {
-                        title: 'テクノ293：微風クローズのレイル制御 ＆ ドロップパンピング',
-                        detail: `微風時（3〜5m）の推進効率を最大化し、横流れを防ぐための高度な調整プランです。
+                        title: 'テクノ293：微風上りのレイルヒール制御 ＆ 接水長最大化',
+                        detail: `微風時（5m/s）の上りレグで、横流れ（リーウェイ）を防ぎスピードを最大化するアジャストです。
                         <ul>
-                            <li><strong>【上りのレイル＆トラッカー調整】</strong>:
-                                <br>マストトラッカーは<strong>「前（Forward）」</strong>に完全ロック。これによってバウ（ノーズ）を沈めて水線を最大化させ、横流れモーメントを強力に抑制します。
-                                <br>さらに、ボードを完全にフラットにするのではなく、微風時は**「わずかに山側（ヒール）に傾けるレイルコントロール」**を意識させ、フィンとレイルの水流アタッチメント（揚力）を稼いで上り角度を取ります。
+                            <li><strong>【マストトラッカー】</strong>: 
+                                <br>マストトラッカーを最前位置の<strong>「前 (Forward)」</strong>にロック。バウ（ノーズ）を水面に押しつけて接水長を伸ばし、横流れを強力に抑え込みます。
                             </li>
-                            <li><strong>【下り（ランニング）への素早いトリム移行】</strong>:
-                                <br>下りレグに入った瞬間、トラッカーをペダル操作で**「後（Back）」**へ送り、接水面積を最小限にして水流ドラッグ（抵抗）を極限まで排除します。
+                            <li><strong>【レイルコントロール】</strong>:
+                                <br>ボードを完全にフラットにするのではなく、**「わずかに山側（ヒール側）に傾ける」**ことで、ボード外側のレイルライン全体をフィンとして機能させ、上り角度を引き上げます。
                             </li>
-                            <li><strong>【自重落とし込みパンピング】</strong>:
-                                <br>ブーム高さを「顎のライン」にセットし、腕でセイルを引くのではなく、ハーネスラインにぶら下がるようにお尻から垂直に体重を落とし込む「シンクロパンプ」で推進力を得ます。
+                            <li><strong>【セイルトリム】</strong>:
+                                <br>アウトテンションはやや緩めにして前方のパワー（ドラフト）を稼ぎつつ、パンピング時はブーム高め（顎の位置）から体重を落とし込むようにシンクロさせます。
                             </li>
                         </ul>`
                     }
@@ -1202,7 +1266,7 @@
             ];
         }
 
-        // 統計情報の更新
+        // 統計更新
         function updateStats() {
             document.getElementById('stat-count').innerText = logs.length;
             if (logs.length > 0) {
@@ -1252,7 +1316,7 @@
             });
         }
 
-        // ログ詳細の選択
+        // 詳細画面描画
         function selectLog(id) {
             activeLogId = id;
             renderLogList();
@@ -1272,7 +1336,7 @@
 
             const isTechno = log.discipline === 'テクノ293';
 
-            // ギアリストをモード（種目）によって出し分ける
+            // ギアリスト
             let gearHtml = '';
             if (isTechno) {
                 const battens = log.battens || ['90°', '90°', '90°', '90°', '90°', '90°'];
@@ -1337,7 +1401,7 @@
                 `;
             }
 
-            // ラウンディング（レース練習）レポートの描画
+            // レースレポート
             let racesHtml = '';
             if (log.races && log.races.length > 0) {
                 let listHtml = '';
@@ -1393,6 +1457,12 @@
                         </div>
                     </div>
                     <div class="detail-actions">
+                        <!-- 編集ボタンの追加 -->
+                        <button class="btn-new-log" style="padding: 8px 16px; background: var(--primary-gradient); box-shadow: none; font-size:13px;" onclick="editLog('${log.id}')">
+                            <!-- Inline SVG for edit -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-edit-2" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            編集
+                        </button>
                         <button class="btn-delete" onclick="deleteLog('${log.id}')">
                             <!-- Inline SVG for trash-2 -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
@@ -1503,7 +1573,7 @@
             `;
         }
 
-        // 保存ロジック（StorageHelperを使用）
+        // 保存および編集更新ロジック
         function saveLog() {
             const date = document.getElementById('form-date').value;
             const location = document.getElementById('form-location').value;
@@ -1521,20 +1591,27 @@
                 return;
             }
 
-            let newLog = {
-                id: 'log-' + Date.now(),
-                date,
-                location,
-                discipline,
-                wind,
-                windDir,
-                sea,
-                weather,
-                sail,
-                feeling,
-                issue
-            };
+            // 新規作成か編集判定
+            let targetLog;
+            if (isEditing && editingLogId) {
+                targetLog = logs.find(l => l.id === editingLogId);
+            } else {
+                targetLog = { id: 'log-' + Date.now() };
+            }
 
+            // 基本データの充填
+            targetLog.date = date;
+            targetLog.location = location;
+            targetLog.discipline = discipline;
+            targetLog.wind = wind;
+            targetLog.windDir = windDir;
+            targetLog.sea = sea;
+            targetLog.weather = weather;
+            targetLog.sail = sail;
+            targetLog.feeling = feeling;
+            targetLog.issue = issue;
+
+            // レースレポートデータの更新
             const raceBlocks = document.querySelectorAll('.form-race-block');
             const races = [];
             raceBlocks.forEach(block => {
@@ -1544,16 +1621,16 @@
                     memo: block.querySelector('.race-memo').value
                 });
             });
-            newLog.races = races;
+            targetLog.races = races;
 
-            // 種目による分岐保存
+            // 種目による分岐保存 ＆ AIアドバイス再生成（編集時にも対応！）
             if (discipline === 'テクノ293') {
-                newLog.ext = document.getElementById('form-techno-ext').value;
-                newLog.down = document.getElementById('form-techno-down').value;
-                newLog.pin = document.getElementById('form-techno-pin').value;
-                newLog.out = document.getElementById('form-techno-out').value;
+                targetLog.ext = document.getElementById('form-techno-ext').value;
+                targetLog.down = document.getElementById('form-techno-down').value;
+                targetLog.pin = document.getElementById('form-techno-pin').value;
+                targetLog.out = document.getElementById('form-techno-out').value;
                 
-                newLog.battens = [
+                targetLog.battens = [
                     document.getElementById('form-techno-batten-1').value,
                     document.getElementById('form-techno-batten-2').value,
                     document.getElementById('form-techno-batten-3').value,
@@ -1562,23 +1639,31 @@
                     document.getElementById('form-techno-batten-6').value
                 ];
                 
-                newLog.tracker = document.getElementById('form-techno-tracker').value;
-                newLog.boom = document.getElementById('form-techno-boom').value;
-                newLog.other = document.getElementById('form-techno-other').value;
-                newLog.nextAction = generateTechnoNextAction(issue, wind);
+                targetLog.tracker = document.getElementById('form-techno-tracker').value;
+                targetLog.boom = document.getElementById('form-techno-boom').value;
+                targetLog.other = document.getElementById('form-techno-other').value;
+                
+                // AIアドバイスの再生成
+                targetLog.nextAction = generateTechnoNextAction(issue, wind);
             } else {
-                newLog.mast = document.getElementById('form-foil-mast').value;
-                newLog.stabilizer = document.getElementById('form-foil-stabilizer').value;
-                newLog.shim = document.getElementById('form-foil-shim').value;
-                newLog.nextAction = generateFoilNextAction(issue, wind);
+                targetLog.mast = document.getElementById('form-foil-mast').value;
+                targetLog.stabilizer = document.getElementById('form-foil-stabilizer').value;
+                targetLog.shim = document.getElementById('form-foil-shim').value;
+                
+                // AIアドバイスの再生成
+                targetLog.nextAction = generateFoilNextAction(issue, wind);
             }
 
-            logs.push(newLog);
+            // 新規作成時のみ配列に挿入
+            if (!isEditing) {
+                logs.push(targetLog);
+            }
+
             StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logs));
             
             closeModal();
             loadLogs();
-            selectLog(newLog.id);
+            selectLog(targetLog.id);
         }
 
         // 高度なテクノ293専用アクション生成エンジン（風速・風向・ハイレベル技術）
@@ -1601,7 +1686,7 @@
                                 <br>ボードを完全にフラットにするのではなく、**「わずかに山側（ヒール側）に傾ける」**ことで、ボード外側のレイルライン全体をフィンとして機能させ、上り角度を引き上げます。
                             </li>
                             <li><strong>【セイルトリム】</strong>:
-                                <br>アウトテンションはやや緩めにして前方のパワー（ドラフト）を稼ぎつつ、パンピング時は「腕で引く」のではなく、高めのブーム（顎の位置）から体重を落とし込むようにシンクロさせます。
+                                <br>アウトテンションはやや緩めにして前方のパワー（ドラフト）を稼ぎつつ、パンピング時はブーム高め（顎の位置）から体重を落とし込むようにシンクロさせます。
                             </li>
                         </ul>`
                     };
@@ -1720,10 +1805,10 @@
                     detail: `ジャイブ時の失速・刺さりを改善するために次回以下を検証します。
                     <ul>
                         <li><strong>A/Bテスト案</strong>:
-                            <br>【A】マストベースを5mm前に出して、ジャイブ進入時のボード前方への傾きを抑制。
-                            <br>【B】スタビライザーのシムを「0.25mm増やす」アジャストを行い、スピードが落ちた際の下向きリフト（ダウンフォース）を強化。
+                            <br>【A】マストベースを5mm前に出して、ジャイブ進入時のボード前方への傾きを抑制.
+                            <br>【B】スタビライザーのシムを「0.25mm増やす」アジャストを行い、スピードが落ちた際の下向きリフト（ダウンフォース）を強化.
                         </li>
-                        <li><strong>フォーム</strong>: ジャイブ進入時に姿勢を高く保ち、ハーネスに体重を残したままマストの垂直軸に乗り続けます。</li>
+                        <li><strong>フォーム</strong>: ジャイブ進入時に姿勢を高く保ち、ハーネスに体重を残したままマストの垂直軸に乗り続けます.</li>
                     </ul>`
                 };
             }
@@ -1734,10 +1819,10 @@
                     detail: `足裏の痛みやオーバーパワーでの制御不能を改善するための次回アクションです。
                     <ul>
                         <li><strong>A/Bテスト案</strong>:
-                            <br>【A】マストベースを「5mm前」にして、フォイルの初期アタックアングルを抑え、足にかかる負担を減らす。
-                            <br>【B】強風用のスタビライザー（140等）に変更し、シムを増やすことでピッチのブレを安定させる。
+                            <br>【A】マストベースを「5mm前」にして、フォイルの初期アタックアングルを抑え、足にかかる負担を減らす.
+                            <br>【B】強風用のスタビライザー（140等）に変更し、シムを増やすことでピッチのブレを安定させる.
                         </li>
-                        <li><strong>フォーム</strong>: 足でボードをヒール側に突っ張る力を抜き、長いハーネスラインを使って腰の位置を外に出し、マストの真上に体重を垂直に落とす意識で乗ります。</li>
+                        <li><strong>フォーム</strong>: 足でボードをヒール側に突っ張る力を抜き、長いハーネスラインを使って腰の位置を外に出し、マストの真上に体重を垂直に落とす意識で乗ります.</li>
                     </ul>`
                 };
             }
@@ -1745,24 +1830,24 @@
             if (text.includes('スピード') || text.includes('最高速') || text.includes('アビーム') || text.includes('抜け') || text.includes('伸び')) {
                 return {
                     title: 'フォイル：ドラッグ（水流抵抗）最小化セッティング',
-                    detail: `アビーム巡航時の最高速とスピードの抜け感を向上させるアクション案です。
+                    detail: `アビーム巡航時の最高速とスピードの抜け感を向上させるアクション案です.
                     <ul>
                         <li><strong>A/Bテスト案</strong>:
-                            <br>【A】スタビライザーのシムアングルを最小限にし（シムを薄くする）、形状ドラッグを限界まで減らす。
-                            <br>【B】マストベースを少しだけ前に調整し、ボード全体のノーズの無駄な浮きを抑えて水平な低ドラッグ滑空を維持する。
+                            <br>【A】スタビライザーのシムアングルを最小限にし（シムを薄くする）、形状ドラッグを限界まで減らす.
+                            <br>【B】マストベースを少しだけ前に調整し、ボード全体のノーズの無駄な浮きを抑えて水平な低ドラッグ滑空を維持する.
                         </li>
-                        <li><strong>メンテナンス</strong>: ウイング表面を極細ペーパー（#1000〜）でサンディングして平滑化します。</li>
+                        <li><strong>メンテナンス</strong>: ウイング表面を極細ペーパー（#1000〜）でサンディングして平滑化します.</li>
                     </ul>`
                 };
             }
 
             return {
                 title: 'フォイル：Fact ➔ Hypothesis のA/B検証プラン',
-                detail: `次回の練習で課題を克服するための「Fact-Hypothesis-Action」検証ループ案です。
+                detail: `次回の練習で課題を克服するための「Fact-Hypothesis-Action」検証ループ案です.
                 <ul>
-                    <li><strong>ステップ1（Fact）</strong>: 発生した課題が「どの風域」「どのコース」で最も強く出たかを記録します。</li>
-                    <li><strong>ステップ2（Hypothesis）</strong>: 課題がリフト過多なら「マスト前 / シム薄」、リフト不足なら「マスト後 / シム厚()」という対照仮説を立てます。</li>
-                    <li><strong>ステップ3（Action）</strong>: 次回の練習開始時に、マスト位置かシムアングルを調整し、前後の走りの変化を比較します。</li>
+                    <li><strong>ステップ1（Fact）</strong>: 発生した課題が「どの風域」「どのコース」で最も強く出たかを記録します.</li>
+                    <li><strong>ステップ2（Hypothesis）</strong>: 課題がリフト過多なら「マスト前 / シム薄」、リフト不足なら「マスト後 / シム厚()」という対照仮説を立てます.</li>
+                    <li><strong>ステップ3（Action）</strong>: 次回の練習開始時に、マスト位置かシムアングルを調整し、前後の走りの変化を比較します.</li>
                 </ul>`
             };
         }
