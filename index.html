@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GrowLog - 上達を加速させる練習ノート</title>
+    <title>GrowLog Windsurf - 上達を加速させる練習ノート</title>
     <!-- Google Fonts: Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -221,6 +221,40 @@
 
         .btn-logout:hover {
             background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* カテゴリーフィルターバー (タイトルのすぐ下に配置) */
+        .category-filter-bar {
+            max-width: 600px;
+            margin: 20px auto 0 auto;
+            padding: 4px;
+            background: rgba(13, 27, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            backdrop-filter: blur(8px);
+        }
+
+        .filter-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25);
         }
 
         /* ボトムナビゲーションバー */
@@ -715,7 +749,8 @@
                 <div class="login-logo-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
                 </div>
-                <h2 class="login-title">GrowLog</h2>
+                <!-- アプリタイトル変更: GrowLog Windsurf -->
+                <h2 class="login-title">GrowLog Windsurf</h2>
                 <p class="login-subtitle">上達を加速させる練習ノート</p>
             </div>
 
@@ -760,8 +795,9 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
                 </div>
                 <div>
-                    <span class="logo-text">GrowLog</span>
-                    <span class="logo-tag">PROTOTYPE V4.3</span>
+                    <!-- アプリタイトル変更: GrowLog Windsurf -->
+                    <span class="logo-text">GrowLog Windsurf</span>
+                    <span class="logo-tag">PROTOTYPE V4.4</span>
                 </div>
             </div>
             
@@ -780,6 +816,14 @@
                 </button>
             </div>
         </header>
+
+        <!-- 👑 グローバルカテゴリーフィルターバー (TECHNO, FOIL, FIN切り替え) -->
+        <div class="category-filter-bar">
+            <button class="filter-btn active" id="btn-cat-all" onclick="setGlobalCategory('ALL', this)">ALL</button>
+            <button class="filter-btn" id="btn-cat-techno" onclick="setGlobalCategory('TECHNO', this)">TECHNO</button>
+            <button class="filter-btn" id="btn-cat-foil" onclick="setGlobalCategory('FOIL', this)">FOIL</button>
+            <button class="filter-btn" id="btn-cat-fin" onclick="setGlobalCategory('FIN', this)">FIN</button>
+        </div>
 
         <!-- 1. 【ホームコンテンツ】 -->
         <div id="tab-content-home" class="tab-content active">
@@ -1066,7 +1110,7 @@
     </div>
 
     <script>
-        // 🔒 安全なローカルストレージのヘルパークラス（認証とログイン状態のバグを修正）
+        // 安全なローカルストレージのヘルパークラス
         const StorageHelper = {
             memoryStorage: {},
 
@@ -1119,6 +1163,7 @@
         let currentTab = 'home';
         let searchQuery = '';
         let searchTag = '';
+        let globalCategory = 'ALL'; // クローバル種目フィルター (ALL / TECHNO / FOIL / FIN)
 
         // ドキュメント初期化
         window.addEventListener('DOMContentLoaded', () => {
@@ -1165,10 +1210,10 @@
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-screen').style.display = 'block';
             document.getElementById('header-username').innerText = currentUser;
-            switchTab('home'); // デフォルトはホーム
+            switchTab('home');
         }
 
-        // タブ切り替え（ログイン / 新規作成）
+        // タブ切り替え
         function toggleLoginTab(tab) {
             const tabLogin = document.getElementById('tab-login');
             const tabSignup = document.getElementById('tab-signup');
@@ -1255,25 +1300,35 @@
             showLoginScreen();
         }
 
+        // 【グローバルカテゴリーフィルター】の切り替え
+        function setGlobalCategory(cat, element) {
+            globalCategory = cat;
+            
+            // 全フィルターボタンのactiveを解除
+            const buttons = document.querySelectorAll('.category-filter-bar .filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            element.classList.add('active');
+
+            // 現在のアクティブなタブを再ロード
+            switchTab(currentTab);
+        }
+
         // 【ボトムバー】タブの切り替え
         function switchTab(tabName) {
             currentTab = tabName;
             
-            // 全タブコンテンツを非表示に
             document.getElementById('tab-content-home').classList.remove('active');
             document.getElementById('tab-content-feed').classList.remove('active');
             document.getElementById('tab-content-search').classList.remove('active');
 
-            // 全ナビアイテムからactiveを削除
             document.getElementById('nav-home').classList.remove('active');
             document.getElementById('nav-feed').classList.remove('active');
             document.getElementById('nav-search').classList.remove('active');
 
-            // 対象を表示
             document.getElementById(`tab-content-${tabName}`).classList.add('active');
             document.getElementById(`nav-${tabName}`).classList.add('active');
 
-            // データのリロード
             if (tabName === 'home') {
                 loadLogs();
             } else if (tabName === 'feed') {
@@ -1283,7 +1338,7 @@
             }
         }
 
-        // モード変更によってフォームフィールドを切り替える
+        // モード切り替え
         function toggleDisciplineFields(val) {
             const technoFields = document.getElementById('techno-gear-fields');
             const foilFields = document.getElementById('foil-gear-fields');
@@ -1306,12 +1361,12 @@
             }
         }
 
-        // 風速スライダー表示更新
+        // 風速表示
         function updateWindValue(val) {
             document.getElementById('wind-val-display').innerText = val + ' m';
         }
 
-        // モーダル開閉
+        // モーダル
         function openModal() {
             isEditing = false;
             editingLogId = null;
@@ -1400,7 +1455,7 @@
             document.getElementById('log-modal').classList.add('open');
         }
 
-        // 動的なレースフォームブロックの追加
+        // 動的なレースフォームブロック
         function addRaceForm(data = { rank: '', start: '', memo: '' }) {
             raceCount++;
             const container = document.getElementById('form-race-container');
@@ -1457,7 +1512,7 @@
             });
         }
 
-        // ホーム用のログ読み込み
+        // ホーム用のログ読み込み ＆ カテゴリー絞り込み
         function loadLogs() {
             const data = StorageHelper.getItem(STORAGE_KEY);
             let allLogs = [];
@@ -1466,16 +1521,25 @@
             }
 
             // 現在ログイン中のユーザーで絞り込み
-            logs = allLogs.filter(log => log.username === currentUser);
+            let myLogs = allLogs.filter(log => log.username === currentUser);
 
             // ログが一件もない場合、サンプルデータを登録
-            if (logs.length === 0 && currentUser === 'sotakanagami') {
+            if (myLogs.length === 0 && currentUser === 'sotakanagami') {
                 const samples = getSampleData();
                 samples.forEach(s => s.username = currentUser);
-                logs = samples;
+                myLogs = samples;
                 allLogs = allLogs.concat(samples);
                 StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
             }
+
+            // 👑 グローバルカテゴリーフィルターの適用
+            logs = myLogs.filter(log => {
+                if (globalCategory === 'ALL') return true;
+                if (globalCategory === 'TECHNO') return log.discipline === 'テクノ293';
+                if (globalCategory === 'FOIL') return log.discipline.includes('フォイル');
+                if (globalCategory === 'FIN') return log.discipline === 'フィンスラローム';
+                return true;
+            });
 
             logs.sort((a, b) => new Date(b.date) - new Date(a.date));
             renderLogList();
@@ -1508,7 +1572,7 @@
                     tracker: '前 (Forward)',
                     boom: '胸の高さ',
                     other: 'ハーネスライン28インチ',
-                    feeling: '風速3〜5mのアンダーコンディション。国大の学生たちと合同で上り下りのレース練習を行う。微風時にダガーを出した状態での上りのスピードが学生たちに伸び悩んでいる様子。',
+                    feeling: '風速3〜5m of アンダーコンディション。国大の学生たちと合同で上り下りのレース練習を行う。微風時にダガーを出した状態での上りのスピードが学生たちに伸び悩んでいる様子。',
                     issue: 'クローズホールド（上り）で角度が取れず、下りのレグで他の艇に抜かれてしまう。パンピングの持続力が足りない。',
                     races: [
                         { rank: '2位 / 12艇中', start: '上3からジャストスタート。', memo: '上りのスピード・角度はまずまず。ダガーを完璧に垂直に下ろした。下りでダガーの収納が少し遅れ、アビームで抜かれて2位。' },
@@ -1533,7 +1597,7 @@
             ];
         }
 
-        // スタッツ更新
+        // スタッツ
         function updateStats() {
             document.getElementById('stat-count').innerText = logs.length;
             if (logs.length > 0) {
@@ -1545,7 +1609,7 @@
             }
         }
 
-        // ホーム：リスト表示
+        // リスト描画
         function renderLogList() {
             const container = document.getElementById('log-items-container');
             container.innerHTML = '';
@@ -1582,7 +1646,7 @@
             });
         }
 
-        // ホーム：詳細画面表示
+        // 詳細画面表示
         function selectLog(id) {
             activeLogId = id;
             renderLogList();
@@ -1914,7 +1978,7 @@
             switchTab(currentTab);
         }
 
-        // フィード描画
+        // フィード描画 ＆ カテゴリー絞り込み
         function renderFeed() {
             const feedContainer = document.getElementById('feed-container');
             feedContainer.innerHTML = '';
@@ -1925,22 +1989,31 @@
                 try { allLogs = JSON.parse(data); } catch(e) {}
             }
 
-            allLogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+            // 👑 グローバルカテゴリーフィルターの適用
+            let displayLogs = allLogs.filter(log => {
+                if (globalCategory === 'ALL') return true;
+                if (globalCategory === 'TECHNO') return log.discipline === 'テクノ293';
+                if (globalCategory === 'FOIL') return log.discipline.includes('フォイル');
+                if (globalCategory === 'FIN') return log.discipline === 'フィンスラローム';
+                return true;
+            });
 
-            if (allLogs.length === 0) {
+            displayLogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (displayLogs.length === 0) {
                 feedContainer.innerHTML = `
                     <div class="empty-state" style="background:var(--panel-bg); border-radius:20px; border:1px solid var(--border-color);">
                         <div class="empty-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rss"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
                         </div>
                         <h3 style="color:white;">フィード投稿がありません</h3>
-                        <p>誰も練習ノートを投稿していません。最初の練習ログを投稿しましょう！</p>
+                        <p>選択したカテゴリーの練習ノートはまだありません。</p>
                     </div>
                 `;
                 return;
             }
 
-            allLogs.forEach(log => {
+            displayLogs.forEach(log => {
                 const card = document.createElement('div');
                 card.className = 'feed-card';
 
@@ -2007,7 +2080,7 @@
 
         function filterSearchTag(tagText, element) {
             searchTag = tagText;
-            const buttons = document.querySelectorAll('.search-tag-btn');
+            const buttons = document.querySelectorAll('.search-tags .search-tag-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
             filterSearchList();
@@ -2023,13 +2096,22 @@
                 try { allLogs = JSON.parse(data); } catch(e) {}
             }
 
+            // 👑 グローバルフィルター & 個別フィルター
             let filtered = allLogs.filter(log => {
+                // 1. グローバルカテゴリーフィルター
+                let matchesGlobal = true;
+                if (globalCategory === 'TECHNO') matchesGlobal = log.discipline === 'テクノ293';
+                else if (globalCategory === 'FOIL') matchesGlobal = log.discipline.includes('フォイル');
+                else if (globalCategory === 'FIN') matchesGlobal = log.discipline === 'フィンスラローム';
+
+                // 2. キーワード検索
                 const matchesQuery = !searchQuery || 
                     (log.username && log.username.toLowerCase().includes(searchQuery)) ||
                     (log.location && log.location.toLowerCase().includes(searchQuery)) ||
                     (log.feeling && log.feeling.toLowerCase().includes(searchQuery)) ||
                     (log.issue && log.issue.toLowerCase().includes(searchQuery));
 
+                // 3. 検索タグ
                 let matchesTag = true;
                 if (searchTag === 'テクノ293') {
                     matchesTag = log.discipline === 'テクノ293';
@@ -2043,7 +2125,7 @@
                     matchesTag = parseInt(log.wind) <= 5;
                 }
 
-                return matchesQuery && matchesTag;
+                return matchesGlobal && matchesQuery && matchesTag;
             });
 
             filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
