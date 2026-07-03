@@ -201,7 +201,7 @@
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
         }
 
-        /* 👑 コモンボタン: btn-new-log (青い背景に白い文字を保証) */
+        /* コモンボタン: btn-new-log (青い背景に白い文字を保証) */
         .btn-new-log {
             background: var(--primary-gradient);
             border: none;
@@ -230,7 +230,7 @@
             stroke: white !important;
         }
 
-        /* 👑 管理画面用承認・拒否ボタン */
+        /* 管理画面用承認・拒否ボタン */
         .btn-approve {
             background: var(--accent-gradient);
             border: none;
@@ -271,6 +271,130 @@
             background: var(--danger);
             color: white !important;
             border-color: transparent;
+        }
+
+        /* いいね・コメントセクションのスタイル */
+        .feed-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .action-icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .action-icon-btn:hover {
+            color: var(--text-main);
+        }
+
+        .action-icon-btn.liked {
+            color: #EF4444 !important;
+        }
+
+        .action-icon-btn.liked svg {
+            fill: #EF4444;
+            stroke: #EF4444;
+        }
+
+        .comment-section-wrapper {
+            margin-top: 16px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .comment-bubble {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .comment-bubble-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .comment-time {
+            font-size: 10px;
+            color: var(--text-dark);
+        }
+
+        .comment-text {
+            color: #E2E8F0;
+            white-space: pre-wrap;
+        }
+
+        .comment-input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .comment-input-group input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: white;
+            font-size: 12px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .comment-input-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-comment-send {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 0 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-comment-send:hover {
+            transform: translateY(-1px);
         }
 
         /* ヘッダー */
@@ -937,7 +1061,7 @@
                 </div>
                 <div>
                     <span class="logo-text">GrowLog Windsurf</span>
-                    <span class="logo-tag">PROTOTYPE V4.10</span>
+                    <span class="logo-tag">PROTOTYPE V4.11</span>
                 </div>
             </div>
             
@@ -1447,7 +1571,7 @@
                 try { users = JSON.parse(data); } catch (e) {}
             }
             
-            let adminUser = users.find(u => u.username.toLowerCase() === 'sotakanagami');
+            let adminUser = users.find(u => u.username && u.username.toLowerCase() === 'sotakanagami');
             if (!adminUser) {
                 adminUser = {
                     username: 'sotakanagami',
@@ -1493,7 +1617,7 @@
             document.getElementById('header-username').innerText = currentUser;
             
             const backBtn = document.getElementById('btn-back-to-admin');
-            if (currentUser.toLowerCase() === 'sotakanagami') {
+            if (currentUser && currentUser.toLowerCase() === 'sotakanagami') {
                 backBtn.style.display = 'inline-flex';
             } else {
                 backBtn.style.display = 'none';
@@ -1550,7 +1674,7 @@
             }
         }
 
-        // 👑 一般ログイン処理（大文字・小文字の区別をなくすよう修正）
+        // 一般ログイン処理
         function handleLogin() {
             const userIn = document.getElementById('login-username').value.trim().toLowerCase();
             const passIn = document.getElementById('login-password').value.trim();
@@ -1572,7 +1696,7 @@
             }
 
             // 大文字小文字の区別をなくして照合
-            const user = users.find(u => u.username.toLowerCase() === userIn && u.password === passIn);
+            const user = users.find(u => u.username && u.username.toLowerCase() === userIn && u.password === passIn);
             if (user) {
                 if (user.status !== 'approved') {
                     alert('申請中のアカウントです。ログインするには管理者（金上颯大）の承認が必要です。');
@@ -1607,7 +1731,7 @@
                     try { users = JSON.parse(data); } catch(e) {}
                 }
                 
-                let adminUser = users.find(u => u.username.toLowerCase() === 'sotakanagami');
+                let adminUser = users.find(u => u.username && u.username.toLowerCase() === 'sotakanagami');
                 if (adminUser) {
                     adminUser.status = 'approved';
                     adminUser.password = 'sota0016';
@@ -1627,7 +1751,7 @@
             }
         }
 
-        // 新規アカウント申請送信（大文字・小文字の区別をなくすよう修正）
+        // 新規アカウント申請送信
         function handleSignup() {
             const userIn = document.getElementById('signup-username').value.trim();
             const passIn = document.getElementById('signup-password').value.trim();
@@ -1652,7 +1776,7 @@
 
             // 大文字小文字の区別を無視して重複チェック
             const cleanUsername = userIn.toLowerCase();
-            if (users.some(u => u.username.toLowerCase() === cleanUsername)) {
+            if (users.some(u => u.username && u.username.toLowerCase() === cleanUsername)) {
                 alert('このユーザー名はすでに使用されています。');
                 return;
             }
@@ -1704,7 +1828,7 @@
             }
         }
 
-        // 👑 管理者画面：新規申請一覧および登録済みユーザー一覧の並列表示（toLowerCaseで安全化）
+        // 管理者画面：新規申請一覧および登録済みユーザー一覧の並列表示
         function renderAdminUsers() {
             const pendingTbody = document.getElementById('admin-pending-users-tbody');
             const approvedTbody = document.getElementById('admin-approved-users-tbody');
@@ -1719,7 +1843,7 @@
             }
 
             const pendingUsers = users.filter(u => u.status === 'pending');
-            const approvedUsers = users.filter(u => u.status === 'approved' || u.username.toLowerCase() === 'sotakanagami');
+            const approvedUsers = users.filter(u => u.status === 'approved' || (u.username && u.username.toLowerCase() === 'sotakanagami'));
 
             // 1. 新規アカウント作成申請（申請フォーム一覧）の描画
             if (pendingUsers.length === 0) {
@@ -1752,7 +1876,7 @@
             // 2. 登録済みユーザー一覧（利用可能）の描画
             approvedUsers.forEach(user => {
                 const tr = document.createElement('tr');
-                const isAdmin = user.username.toLowerCase() === 'sotakanagami';
+                const isAdmin = user.username && user.username.toLowerCase() === 'sotakanagami';
 
                 let roleHtml = isAdmin
                     ? `<span class="status-badge approved" style="background:rgba(139, 92, 246, 0.15); color:var(--admin-purple);">👑 管理者</span>`
@@ -1763,7 +1887,7 @@
                     : `<button class="btn-reject" onclick="adminDeleteUser('${user.username}')">👤 ユーザー削除</button>`;
 
                 tr.innerHTML = `
-                    <td style="font-weight:700; color:var(--text-main);">@${user.username}</td>
+                    <td style="font-weight:700; color:var(--text-main);">@${user.username || 'unknown'}</td>
                     <td>${roleHtml}</td>
                     <td>${actionHtml}</td>
                 `;
@@ -1779,7 +1903,7 @@
                 try { users = JSON.parse(data); } catch(e) {}
             }
 
-            const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+            const user = users.find(u => u.username && u.username.toLowerCase() === username.toLowerCase());
             if (user) {
                 user.status = 'approved';
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
@@ -1796,7 +1920,7 @@
                 if (data) {
                     try { users = JSON.parse(data); } catch(e) {}
                 }
-                users = users.filter(u => u.username.toLowerCase() !== username.toLowerCase());
+                users = users.filter(u => u.username && u.username.toLowerCase() !== username.toLowerCase());
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
 
                 alert(`@${username} の申請を却下しました。`);
@@ -1855,7 +1979,7 @@
             alert(`新規登録用の承認パスコードを「${val}」に変更しました。`);
         }
 
-        // 登録済みユーザー削除（toLowerCaseで安全化）
+        // 登録済みユーザー削除
         function adminDeleteUser(username) {
             if (confirm(`@${username} を削除しますか？\nこの操作は取り消せません。該当ユーザーの練習データも同時に削除されます。`)) {
                 const uData = StorageHelper.getItem(USERS_KEY);
@@ -1863,7 +1987,7 @@
                 if (uData) {
                     try { users = JSON.parse(uData); } catch(e) {}
                 }
-                users = users.filter(u => u.username.toLowerCase() !== username.toLowerCase());
+                users = users.filter(u => u.username && u.username.toLowerCase() !== username.toLowerCase());
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
 
                 const lData = StorageHelper.getItem(STORAGE_KEY);
@@ -1871,7 +1995,7 @@
                 if (lData) {
                     try { logsAll = JSON.parse(lData); } catch(e) {}
                 }
-                logsAll = logsAll.filter(l => l.username.toLowerCase() !== username.toLowerCase());
+                logsAll = logsAll.filter(l => l.username && l.username.toLowerCase() !== username.toLowerCase());
                 StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logsAll));
 
                 alert(`@${username} のアカウントと練習ノートをすべて削除しました。`);
@@ -2111,9 +2235,10 @@
                 try { allLogs = JSON.parse(data); } catch(e) {}
             }
 
-            let myLogs = allLogs.filter(log => log.username.toLowerCase() === currentUser.toLowerCase());
+            // 安全な大文字小文字無視フィルタリング
+            let myLogs = allLogs.filter(log => log.username && currentUser && log.username.toLowerCase() === currentUser.toLowerCase());
 
-            if (myLogs.length === 0 && currentUser.toLowerCase() === 'sotakanagami') {
+            if (myLogs.length === 0 && currentUser && currentUser.toLowerCase() === 'sotakanagami') {
                 const samples = getSampleData();
                 samples.forEach(s => s.username = currentUser);
                 myLogs = samples;
@@ -2124,7 +2249,7 @@
             logs = myLogs.filter(log => {
                 if (globalCategory === 'ALL') return true;
                 if (globalCategory === 'TECHNO') return log.discipline === 'テクノ293';
-                if (globalCategory === 'FOIL') return log.discipline.includes('フォイル');
+                if (globalCategory === 'FOIL') return log.discipline && log.discipline.includes('フォイル');
                 if (globalCategory === 'FIN') return log.discipline === 'フィンスラローム';
                 return true;
             });
@@ -2162,6 +2287,8 @@
                     other: 'ハーネスライン28インチ',
                     feeling: '風速3〜5mのアンダーコンディション。国大の学生たちと合同で上り下りのレース練習を行う。微風時にダガーを出した状態での上りのスピードが学生たちに伸び悩んでいる様子。',
                     issue: 'クローズホールド（上り）で角度が取れず、下りのレグで他の艇に抜かれてしまう。パンピングの持続力が足りない。',
+                    likes: [],
+                    comments: [],
                     races: [
                         { rank: '2位 / 12艇中', start: '上3からジャストスタート。', memo: '上りのスピード・角度はまずまず。ダガーを完璧に垂直に下ろした。下りでダガーの収納が少し遅れ、アビームで抜かれて2位。' },
                         { rank: '4位 / 12艇中', start: '少し遅れて2列目から。', memo: 'スタートミスで悪い風を受けた。下りのパンピングで追い上げたが順位は4位まで。パンピングの落とし込みがまだ甘い。' }
@@ -2352,6 +2479,28 @@
                 `;
             }
 
+            // いいね！とコメントの状態構築
+            const likes = log.likes || [];
+            const comments = log.comments || [];
+            const isLiked = currentUser && likes.some(u => u && u.toLowerCase() === currentUser.toLowerCase());
+
+            let commentsHtml = '';
+            if (comments.length > 0) {
+                comments.forEach(c => {
+                    commentsHtml += `
+                        <div class="comment-bubble">
+                            <div class="comment-bubble-header">
+                                <span class="comment-author">@${c.username || 'unknown'}</span>
+                                <span class="comment-time">${c.date || ''}</span>
+                            </div>
+                            <div class="comment-text">${c.text || ''}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                commentsHtml = `<div style="text-align:center; font-size:11px; color:var(--text-dark); padding: 8px 0;">まだコメントはありません。</div>`;
+            }
+
             const detailContainer = document.getElementById('detail-panel');
             detailContainer.innerHTML = `
                 <div class="post-author-header">
@@ -2377,7 +2526,6 @@
                         </div>
                     </div>
                     <div class="detail-actions">
-                        <!-- 👑 編集ボタン (btn-new-logで文字を白に固定) -->
                         <button class="btn-new-log" style="padding: 8px 16px; box-shadow: none;" onclick="editLog('${log.id}')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-edit-2" style="display:inline-block; vertical-align:middle; margin-right:4px;"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
                             編集
@@ -2459,6 +2607,29 @@
                     </div>
 
                     ${racesHtml}
+                    
+                    <!-- いいね！・コメントエリア (詳細パネル) -->
+                    <div class="detail-section" style="grid-column: span 2; margin-top: 10px; border-top:1px solid var(--border-color); padding-top:20px;">
+                        <div class="feed-card-actions" style="border-top:none; margin-top:0; padding-top:0;">
+                            <button class="action-icon-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${log.id}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                <span style="font-size:13px;">いいね！ (${likes.length})</span>
+                            </button>
+                            <button class="action-icon-btn" onclick="document.getElementById('comment-input-detail-${log.id}').focus()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                <span style="font-size:13px;">コメント (${comments.length})</span>
+                            </button>
+                        </div>
+                        <div class="comment-section-wrapper" style="margin-top:12px;">
+                            <div class="comment-list" id="comment-list-detail-${log.id}">
+                                ${commentsHtml}
+                            </div>
+                            <div class="comment-input-group">
+                                <input type="text" id="comment-input-detail-${log.id}" placeholder="コメントを入力..." onkeydown="if(event.key === 'Enter') addComment('${log.id}', 'detail')">
+                                <button class="btn-comment-send" onclick="addComment('${log.id}', 'detail')">送信</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
         }
@@ -2526,6 +2697,10 @@
             targetLog.feeling = feeling;
             targetLog.issue = issue;
 
+            // いいね・コメント配列の初期化
+            if (!targetLog.likes) targetLog.likes = [];
+            if (!targetLog.comments) targetLog.comments = [];
+
             const raceBlocks = document.querySelectorAll('.form-race-block');
             const races = [];
             raceBlocks.forEach(block => {
@@ -2567,7 +2742,82 @@
             switchTab(currentTab);
         }
 
-        // フィード描画
+        // 👑 いいねリアクションのトグル処理
+        function toggleLike(logId) {
+            const data = StorageHelper.getItem(STORAGE_KEY);
+            let allLogs = [];
+            if (data) {
+                try { allLogs = JSON.parse(data); } catch(e) {}
+            }
+
+            const log = allLogs.find(l => l.id === logId);
+            if (log) {
+                if (!log.likes) log.likes = [];
+                
+                const userLower = currentUser.toLowerCase();
+                const index = log.likes.findIndex(u => u && u.toLowerCase() === userLower);
+                
+                if (index > -1) {
+                    log.likes.splice(index, 1);
+                } else {
+                    log.likes.push(currentUser);
+                }
+
+                StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
+                
+                // 表示状態の維持＆部分再レンダリング
+                if (currentTab === 'feed') {
+                    renderFeed();
+                } else if (currentTab === 'search') {
+                    filterSearchList();
+                } else if (currentTab === 'home') {
+                    loadLogs();
+                }
+            }
+        }
+
+        // 👑 コメント追加処理
+        function addComment(logId, type = 'feed') {
+            const inputId = type === 'detail' ? `comment-input-detail-${logId}` : `comment-input-${logId}`;
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text) return;
+
+            const data = StorageHelper.getItem(STORAGE_KEY);
+            let allLogs = [];
+            if (data) {
+                try { allLogs = JSON.parse(data); } catch(e) {}
+            }
+
+            const log = allLogs.find(l => l.id === logId);
+            if (log) {
+                if (!log.comments) log.comments = [];
+                
+                const now = new Date();
+                const dateStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+                log.comments.push({
+                    id: 'comment-' + Date.now(),
+                    username: currentUser,
+                    text: text,
+                    date: dateStr
+                });
+
+                StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
+                input.value = '';
+                
+                if (currentTab === 'feed') {
+                    renderFeed();
+                } else if (currentTab === 'search') {
+                    filterSearchList();
+                } else if (currentTab === 'home') {
+                    loadLogs();
+                }
+            }
+        }
+
+        // 👑 フィード描画（オプショナルチェーン & いいね・コメント埋め込み）
         function renderFeed() {
             const feedContainer = document.getElementById('feed-container');
             feedContainer.innerHTML = '';
@@ -2583,17 +2833,19 @@
             if (usersData) {
                 try {
                     const parsedUsers = JSON.parse(usersData);
-                    approvedUsers = parsedUsers.filter(u => u.status === 'approved').map(u => u.username.toLowerCase());
+                    const list = parsedUsers.filter(u => u.status === 'approved').map(u => u.username ? u.username.toLowerCase() : "");
+                    approvedUsers = [...new Set(['sotakanagami', ...list])];
                 } catch(e) {}
             }
 
             let displayLogs = allLogs.filter(log => {
-                const isApproved = approvedUsers.includes(log.username.toLowerCase());
+                const logUser = log.username ? log.username.toLowerCase() : "";
+                const isApproved = approvedUsers.includes(logUser);
                 if (!isApproved) return false;
 
                 if (globalCategory === 'ALL') return true;
                 if (globalCategory === 'TECHNO') return log.discipline === 'テクノ293';
-                if (globalCategory === 'FOIL') return log.discipline.includes('フォイル');
+                if (globalCategory === 'FOIL') return log.discipline && log.discipline.includes('フォイル');
                 if (globalCategory === 'FIN') return log.discipline === 'フィンスラローム';
                 return true;
             });
@@ -2620,6 +2872,27 @@
                 const isTechno = log.discipline === 'テクノ293';
                 const tagClass = isTechno ? 'tag-techno' : 'tag-foil';
                 const tagText = isTechno ? 'TECHNO' : 'FOIL';
+
+                const likes = log.likes || [];
+                const comments = log.comments || [];
+                const isLiked = currentUser && likes.some(u => u && u.toLowerCase() === currentUser.toLowerCase());
+
+                let commentsHtml = '';
+                if (comments.length > 0) {
+                    comments.forEach(c => {
+                        commentsHtml += `
+                            <div class="comment-bubble">
+                                <div class="comment-bubble-header">
+                                    <span class="comment-author">@${c.username || 'unknown'}</span>
+                                    <span class="comment-time">${c.date || ''}</span>
+                                </div>
+                                <div class="comment-text">${c.text || ''}</div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    commentsHtml = `<div style="text-align:center; font-size:11px; color:var(--text-dark); padding: 8px 0;">まだコメントはありません。</div>`;
+                }
 
                 card.innerHTML = `
                     <div class="feed-card-header">
@@ -2662,6 +2935,29 @@
                                 </div>
                             </div>
                         ` : ''}
+                        
+                        <!-- いいね・コメントリアクションバー -->
+                        <div class="feed-card-actions">
+                            <button class="action-icon-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${log.id}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                <span>いいね！ (${likes.length})</span>
+                            </button>
+                            <button class="action-icon-btn" onclick="document.getElementById('comment-input-${log.id}').focus()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                <span>コメント (${comments.length})</span>
+                            </button>
+                        </div>
+
+                        <!-- コメントセクション -->
+                        <div class="comment-section-wrapper">
+                            <div class="comment-list" id="comment-list-${log.id}">
+                                ${commentsHtml}
+                            </div>
+                            <div class="comment-input-group">
+                                <input type="text" id="comment-input-${log.id}" placeholder="コメントを入力..." onkeydown="if(event.key === 'Enter') addComment('${log.id}')">
+                                <button class="btn-comment-send" onclick="addComment('${log.id}')">送信</button>
+                            </div>
+                        </div>
                     </div>
                 `;
                 feedContainer.appendChild(card);
@@ -2688,6 +2984,7 @@
             filterSearchList();
         }
 
+        // 検索実行（オプショナルチェーン・安全化 ＆ いいね・コメント埋め込み）
         function filterSearchList() {
             const resultsContainer = document.getElementById('search-results-container');
             resultsContainer.innerHTML = '';
@@ -2703,17 +3000,19 @@
             if (usersData) {
                 try {
                     const parsedUsers = JSON.parse(usersData);
-                    approvedUsers = parsedUsers.filter(u => u.status === 'approved').map(u => u.username.toLowerCase());
+                    const list = parsedUsers.filter(u => u.status === 'approved').map(u => u.username ? u.username.toLowerCase() : "");
+                    approvedUsers = [...new Set(['sotakanagami', ...list])];
                 } catch(e) {}
             }
 
             let filtered = allLogs.filter(log => {
-                const isApproved = approvedUsers.includes(log.username.toLowerCase());
+                const logUser = log.username ? log.username.toLowerCase() : "";
+                const isApproved = approvedUsers.includes(logUser);
                 if (!isApproved) return false;
 
                 let matchesGlobal = true;
                 if (globalCategory === 'TECHNO') matchesGlobal = log.discipline === 'テクノ293';
-                else if (globalCategory === 'FOIL') matchesGlobal = log.discipline.includes('フォイル');
+                else if (globalCategory === 'FOIL') matchesGlobal = log.discipline && log.discipline.includes('フォイル');
                 else if (globalCategory === 'FIN') matchesGlobal = log.discipline === 'フィンスラローム';
 
                 const matchesQuery = !searchQuery || 
@@ -2726,7 +3025,7 @@
                 if (searchTag === 'テクノ293') {
                     matchesTag = log.discipline === 'テクノ293';
                 } else if (searchTag === 'フォイル') {
-                    matchesTag = log.discipline.includes('フォイル');
+                    matchesTag = log.discipline && log.discipline.includes('フォイル');
                 } else if (searchTag === '材木座') {
                     matchesTag = log.location && log.location.includes('材木座');
                 } else if (searchTag === '強風') {
@@ -2757,6 +3056,27 @@
                 const tagClass = isTechno ? 'tag-techno' : 'tag-foil';
                 const tagText = isTechno ? 'TECHNO' : 'FOIL';
 
+                const likes = log.likes || [];
+                const comments = log.comments || [];
+                const isLiked = currentUser && likes.some(u => u && u.toLowerCase() === currentUser.toLowerCase());
+
+                let commentsHtml = '';
+                if (comments.length > 0) {
+                    comments.forEach(c => {
+                        commentsHtml += `
+                            <div class="comment-bubble">
+                                <div class="comment-bubble-header">
+                                    <span class="comment-author">@${c.username || 'unknown'}</span>
+                                    <span class="comment-time">${c.date || ''}</span>
+                                </div>
+                                <div class="comment-text">${c.text || ''}</div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    commentsHtml = `<div style="text-align:center; font-size:11px; color:var(--text-dark); padding: 8px 0;">まだコメントはありません。</div>`;
+                }
+
                 card.innerHTML = `
                     <div class="feed-card-header">
                         <div class="post-author-header" style="margin-bottom:0; padding-bottom:0; border-bottom:none;">
@@ -2796,6 +3116,29 @@
                                 </div>
                             </div>
                         ` : ''}
+                        
+                        <!-- いいね・コメントリアクションバー -->
+                        <div class="feed-card-actions">
+                            <button class="action-icon-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${log.id}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                <span>いいね！ (${likes.length})</span>
+                            </button>
+                            <button class="action-icon-btn" onclick="document.getElementById('comment-input-${log.id}').focus()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                <span>コメント (${comments.length})</span>
+                            </button>
+                        </div>
+
+                        <!-- コメントセクション -->
+                        <div class="comment-section-wrapper">
+                            <div class="comment-list" id="comment-list-${log.id}">
+                                ${commentsHtml}
+                            </div>
+                            <div class="comment-input-group">
+                                <input type="text" id="comment-input-${log.id}" placeholder="コメントを入力..." onkeydown="if(event.key === 'Enter') addComment('${log.id}')">
+                                <button class="btn-comment-send" onclick="addComment('${log.id}')">送信</button>
+                            </div>
+                        </div>
                     </div>
                 `;
                 resultsContainer.appendChild(card);
@@ -2907,7 +3250,7 @@
 
             return {
                 title: 'テクノ293：微風から強風までのトリムトランジション',
-                detail: `コンディションに応じた、マストトラッカーおよびトリム調整の連動チェックリストです。
+                detail: `コンディションに応じた, マストトラッカーおよびトリム調整の連動チェックリストです。
                 <ul>
                     <li><strong>1. クローズホールド（上り）</strong>: 
                         <br>・微風時：トラッカー「前」、レイルは山側へヒール、セイル緩め。
