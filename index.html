@@ -397,6 +397,24 @@
             transform: translateY(-1px);
         }
 
+        .btn-toggle-details {
+            background: none;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 24px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-toggle-details:hover {
+            background: rgba(14, 165, 233, 0.1);
+            transform: translateY(-1px);
+        }
+
         /* ヘッダー */
         header {
             padding: 20px 8%;
@@ -2742,6 +2760,24 @@
             switchTab(currentTab);
         }
 
+        // 👑 フィードカード詳細の表示・非表示トグル処理
+        function toggleFeedCardDetails(logId) {
+            const detailsDiv = document.getElementById(`feed-details-${logId}`);
+            const previewDiv = document.getElementById(`feed-preview-${logId}`);
+            const btn = document.getElementById(`btn-toggle-${logId}`);
+            if (detailsDiv && btn) {
+                if (detailsDiv.style.display === 'none') {
+                    detailsDiv.style.display = 'flex';
+                    if (previewDiv) previewDiv.style.display = 'none';
+                    btn.innerHTML = '📕 詳細を閉じる';
+                } else {
+                    detailsDiv.style.display = 'none';
+                    if (previewDiv) previewDiv.style.display = 'block';
+                    btn.innerHTML = '📖 詳細を読む';
+                }
+            }
+        }
+
         // 👑 いいねリアクションのトグル処理
         function toggleLike(logId) {
             const data = StorageHelper.getItem(STORAGE_KEY);
@@ -2913,50 +2949,66 @@
                     </div>
 
                     <div class="feed-card-body">
-                        <div class="feed-text-block">
+                        <!-- プレビュー表示 -->
+                        <div class="feed-text-block" id="feed-preview-${log.id}">
                             <div class="feed-block-title">今日の気づき・感覚</div>
-                            <div style="font-size:14px; line-height:1.6; color:#E2E8F0; white-space:pre-wrap;">${log.feeling || '（記述なし）'}</div>
+                            <div style="font-size:14px; line-height:1.6; color:#E2E8F0; white-space:pre-wrap;">${log.feeling && log.feeling.length > 80 ? log.feeling.substring(0, 80) + '...' : (log.feeling || '（記述なし）')}</div>
                         </div>
 
-                        <div class="feed-text-block" style="border-left: 3px solid var(--danger);">
-                            <div class="feed-block-title" style="color:var(--danger);">本日の課題</div>
-                            <div style="font-size:14px; line-height:1.6; color:#E2E8F0; white-space:pre-wrap;">${log.issue || ''}</div>
-                        </div>
+                        <!-- 詳細情報（最初は非表示） -->
+                        <div id="feed-details-${log.id}" style="display: none; flex-direction: column; gap: 16px;">
+                            <div class="feed-text-block" style="${log.feeling && log.feeling.length > 80 ? '' : 'display:none;'}">
+                                <div class="feed-block-title">今日の気づき・感覚（全文）</div>
+                                <div style="font-size:14px; line-height:1.6; color:#E2E8F0; white-space:pre-wrap;">${log.feeling || '（記述なし）'}</div>
+                            </div>
 
-                        ${log.nextAction ? `
-                            <div class="ai-action-panel" style="margin-top:0;">
-                                <div class="ai-title">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M12 3v16M19 12H5M12 3l4 4M12 19l-4-4M19 12l-4 4M5 12l4-4"/></svg>
-                                    AI ネクストアクション提案
+                            <div class="feed-text-block" style="border-left: 3px solid var(--danger);">
+                                <div class="feed-block-title" style="color:var(--danger);">本日の課題</div>
+                                <div style="font-size:14px; line-height:1.6; color:#E2E8F0; white-space:pre-wrap;">${log.issue || ''}</div>
+                            </div>
+
+                            ${log.nextAction ? `
+                                <div class="ai-action-panel" style="margin-top:0;">
+                                    <div class="ai-title">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M12 3v16M19 12H5M12 3l4 4M12 19l-4-4M19 12l-4 4M5 12l4-4"/></svg>
+                                        AI ネクストアクション提案
+                                    </div>
+                                    <div class="ai-plan">
+                                        <strong>${log.nextAction.title}</strong>
+                                        <div style="margin-top:6px; font-size:13px; line-height:1.5;">${log.nextAction.detail}</div>
+                                    </div>
                                 </div>
-                                <div class="ai-plan">
-                                    <strong>${log.nextAction.title}</strong>
-                                    <div style="margin-top:6px; font-size:13px; line-height:1.5;">${log.nextAction.detail}</div>
+                            ` : ''}
+                            
+                            <!-- いいね・コメントリアクションバー -->
+                            <div class="feed-card-actions" style="margin-top:0; padding-top:10px;">
+                                <button class="action-icon-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${log.id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                    <span>いいね！ (${likes.length})</span>
+                                </button>
+                                <button class="action-icon-btn" onclick="document.getElementById('comment-input-${log.id}').focus()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                    <span>コメント (${comments.length})</span>
+                                </button>
+                            </div>
+
+                            <!-- コメントセクション -->
+                            <div class="comment-section-wrapper">
+                                <div class="comment-list" id="comment-list-${log.id}">
+                                    ${commentsHtml}
+                                </div>
+                                <div class="comment-input-group">
+                                    <input type="text" id="comment-input-${log.id}" placeholder="コメントを入力..." onkeydown="if(event.key === 'Enter') addComment('${log.id}')">
+                                    <button class="btn-comment-send" onclick="addComment('${log.id}')">送信</button>
                                 </div>
                             </div>
-                        ` : ''}
-                        
-                        <!-- いいね・コメントリアクションバー -->
-                        <div class="feed-card-actions">
-                            <button class="action-icon-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${log.id}')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                                <span>いいね！ (${likes.length})</span>
-                            </button>
-                            <button class="action-icon-btn" onclick="document.getElementById('comment-input-${log.id}').focus()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                <span>コメント (${comments.length})</span>
-                            </button>
                         </div>
 
-                        <!-- コメントセクション -->
-                        <div class="comment-section-wrapper">
-                            <div class="comment-list" id="comment-list-${log.id}">
-                                ${commentsHtml}
-                            </div>
-                            <div class="comment-input-group">
-                                <input type="text" id="comment-input-${log.id}" placeholder="コメントを入力..." onkeydown="if(event.key === 'Enter') addComment('${log.id}')">
-                                <button class="btn-comment-send" onclick="addComment('${log.id}')">送信</button>
-                            </div>
+                        <!-- トグルボタン -->
+                        <div style="margin-top: 12px; text-align: center;">
+                            <button class="btn-toggle-details" id="btn-toggle-${log.id}" onclick="toggleFeedCardDetails('${log.id}')">
+                                📖 詳細を読む
+                            </button>
                         </div>
                     </div>
                 `;
@@ -3096,48 +3148,66 @@
                     </div>
 
                     <div class="feed-card-body">
-                        <div class="feed-text-block">
+                        <!-- プレビュー表示 -->
+                        <div class="feed-text-block" id="feed-preview-${log.id}">
                             <div class="feed-block-title">今日の気づき・感覚</div>
-                            <div style="font-size:14px; line-height:1.6; color:#E2E8F0; white-space:pre-wrap;">${log.feeling || '（記述なし）'}</div>
-                        </div>
-                        <div class="feed-text-block" style="border-left: 3px solid var(--danger);">
-                            <div class="feed-block-title" style="color:var(--danger);">本日の課題</div>
-                            <div style="font-size:14px; line-height:1.6; color:#E2E8F0; white-space:pre-wrap;">${log.issue || ''}</div>
-                        </div>
-                        ${log.nextAction ? `
-                            <div class="ai-action-panel" style="margin-top:0;">
-                                <div class="ai-title">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M12 3v16M19 12H5M12 3l4 4M12 19l-4-4M19 12l-4 4M5 12l4-4"/></svg>
-                                    AI ネクストアクション提案
-                                </div>
-                                <div class="ai-plan">
-                                    <strong>${log.nextAction.title}</strong>
-                                    <div style="margin-top:6px; font-size:13px; line-height:1.5;">${log.nextAction.detail}</div>
-                                </div>
-                            </div>
-                        ` : ''}
-                        
-                        <!-- いいね・コメントリアクションバー -->
-                        <div class="feed-card-actions">
-                            <button class="action-icon-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${log.id}')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                                <span>いいね！ (${likes.length})</span>
-                            </button>
-                            <button class="action-icon-btn" onclick="document.getElementById('comment-input-${log.id}').focus()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                <span>コメント (${comments.length})</span>
-                            </button>
+                            <div style="font-size:14px; line-height:1.6; color:#E2E8F0; white-space:pre-wrap;">${log.feeling && log.feeling.length > 80 ? log.feeling.substring(0, 80) + '...' : (log.feeling || '（記述なし）')}</div>
                         </div>
 
-                        <!-- コメントセクション -->
-                        <div class="comment-section-wrapper">
-                            <div class="comment-list" id="comment-list-${log.id}">
-                                ${commentsHtml}
+                        <!-- 詳細情報（最初は非表示） -->
+                        <div id="feed-details-${log.id}" style="display: none; flex-direction: column; gap: 16px;">
+                            <div class="feed-text-block" style="${log.feeling && log.feeling.length > 80 ? '' : 'display:none;'}">
+                                <div class="feed-block-title">今日の気づき・感覚（全文）</div>
+                                <div style="font-size:14px; line-height:1.6; color:#E2E8F0; white-space:pre-wrap;">${log.feeling || '（記述なし）'}</div>
                             </div>
-                            <div class="comment-input-group">
-                                <input type="text" id="comment-input-${log.id}" placeholder="コメントを入力..." onkeydown="if(event.key === 'Enter') addComment('${log.id}')">
-                                <button class="btn-comment-send" onclick="addComment('${log.id}')">送信</button>
+
+                            <div class="feed-text-block" style="border-left: 3px solid var(--danger);">
+                                <div class="feed-block-title" style="color:var(--danger);">本日の課題</div>
+                                <div style="font-size:14px; line-height:1.6; color:#E2E8F0; white-space:pre-wrap;">${log.issue || ''}</div>
                             </div>
+
+                            ${log.nextAction ? `
+                                <div class="ai-action-panel" style="margin-top:0;">
+                                    <div class="ai-title">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="M12 3v16M19 12H5M12 3l4 4M12 19l-4-4M19 12l-4 4M5 12l4-4"/></svg>
+                                        AI ネクストアクション提案
+                                    </div>
+                                    <div class="ai-plan">
+                                        <strong>${log.nextAction.title}</strong>
+                                        <div style="margin-top:6px; font-size:13px; line-height:1.5;">${log.nextAction.detail}</div>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            <!-- いいね・コメントリアクションバー -->
+                            <div class="feed-card-actions" style="margin-top:0; padding-top:10px;">
+                                <button class="action-icon-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${log.id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                    <span>いいね！ (${likes.length})</span>
+                                </button>
+                                <button class="action-icon-btn" onclick="document.getElementById('comment-input-${log.id}').focus()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                    <span>コメント (${comments.length})</span>
+                                </button>
+                            </div>
+
+                            <!-- コメントセクション -->
+                            <div class="comment-section-wrapper">
+                                <div class="comment-list" id="comment-list-${log.id}">
+                                    ${commentsHtml}
+                                </div>
+                                <div class="comment-input-group">
+                                    <input type="text" id="comment-input-${log.id}" placeholder="コメントを入力..." onkeydown="if(event.key === 'Enter') addComment('${log.id}')">
+                                    <button class="btn-comment-send" onclick="addComment('${log.id}')">送信</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- トグルボタン -->
+                        <div style="margin-top: 12px; text-align: center;">
+                            <button class="btn-toggle-details" id="btn-toggle-${log.id}" onclick="toggleFeedCardDetails('${log.id}')">
+                                📖 詳細を読む
+                            </button>
                         </div>
                     </div>
                 `;
