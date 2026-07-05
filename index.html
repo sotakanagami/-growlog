@@ -1079,7 +1079,11 @@
                 </div>
                 <div>
                     <span class="logo-text">GrowLog Windsurf</span>
-                    <span class="logo-tag">PROTOTYPE V4.11</span>
+                    <div style="display: flex; align-items: center; gap: 6px; margin-top: 2px;">
+                        <span class="logo-tag" style="margin-top: 0;">V4.20</span>
+                        <span id="sync-status-badge" style="font-size: 9px; color: var(--accent); font-weight: 800; background: rgba(16, 185, 129, 0.1); padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px;">🟢 ONLINE</span>
+                        <span id="sync-loading-badge" style="font-size: 9px; color: var(--orange); font-weight: 800; background: rgba(249, 115, 22, 0.1); padding: 2px 6px; border-radius: 4px; display: none; align-items: center; gap: 3px;">🔄 SYNCING...</span>
+                    </div>
                 </div>
             </div>
             
@@ -1555,6 +1559,123 @@
         const STORAGE_KEY = 'growlog_records_v4_0';
         const PASSCODE_KEY = 'growlog_admin_passcode_v4';
 
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxRvpd6ahIFnhE4qMTHLc2wVxr2sInpKZtliEuoDoTD-2MkpGjEaEP1BEd_ag9FXEht/exec";
+
+        function showLoadingIndicator(show) {
+            const statusBadge = document.getElementById('sync-status-badge');
+            const loadingBadge = document.getElementById('sync-loading-badge');
+            if (statusBadge && loadingBadge) {
+                if (show) {
+                    statusBadge.style.display = 'none';
+                    loadingBadge.style.display = 'inline-flex';
+                } else {
+                    statusBadge.style.display = 'inline-flex';
+                    loadingBadge.style.display = 'none';
+                }
+            }
+        }
+
+        // 👑 オンライン同期マネージャー
+        const SyncManager = {
+            async downloadData() {
+                if (!GAS_API_URL) return;
+                showLoadingIndicator(true);
+                try {
+                    // 1. ユーザーデータのダウンロード
+                    const usersRes = await fetch(`${GAS_API_URL}?action=get_users`);
+                    if (usersRes.ok) {
+                        const cloudUsers = await usersRes.json();
+                        if (Array.isArray(cloudUsers) && cloudUsers.length > 0) {
+                            StorageHelper.setItem(USERS_KEY, JSON.stringify(cloudUsers));
+                        }
+                    }
+
+                    // 2. ログ（練習ノート）のダウンロード
+                    const logsRes = await fetch(`${GAS_API_URL}?action=get_logs`);
+                    if (logsRes.ok) {
+                        const cloudLogs = await logsRes.json();
+                        if (Array.isArray(cloudLogs)) {
+                            const parsedLogs = cloudLogs.map(log => {
+                                return {
+                                    ...log,
+                                    battens: typeof log.battens === 'string' ? JSON.parse(log.battens) : (log.battens || []),
+                                    races: typeof log.races === 'string' ? JSON.parse(log.races) : (log.races || []),
+                                    likes: typeof log.likes === 'string' ? JSON.parse(log.likes) : (log.likes || []),
+                                    comments: typeof log.comments === 'string' ? JSON.parse(log.comments) : (log.comments || []),
+                                    nextAction: typeof log.nextAction === 'string' ? JSON.parse(log.nextAction) : (log.nextAction || null)
+                                };
+                            });
+                            StorageHelper.setItem(STORAGE_KEY, JSON.stringify(parsedLogs));
+                        }
+                    }
+
+                    // 3. パスコードの同期
+                    const codeRes = await fetch(`${GAS_API_URL}?action=get_passcode`);
+                    if (codeRes.ok) {
+                        const res = await codeRes.json();
+                        if (res.passcode) {
+                            StorageHelper.setItem(PASSCODE_KEY, res.passcode);
+                        }
+                    }
+                } catch (err) {
+                    console.warn("Spreadsheet sync failed, using cached local data", err);
+                } finally {
+                    showLoadingIndicator(false);
+                }
+            },
+
+            async uploadUsers(usersList) {
+                if (!GAS_API_URL) return;
+                try {
+                    await fetch(GAS_API_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            action: "sync_users",
+                            users: usersList
+                        })
+                    });
+                } catch (err) {
+                    console.warn("Upload users failed:", err);
+                }
+            },
+
+            async uploadLogs(logsList) {
+                if (!GAS_API_URL) return;
+                try {
+                    await fetch(GAS_API_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            action: "sync_logs",
+                            logs: logsList
+                        })
+                    });
+                } catch (err) {
+                    console.warn("Upload logs failed:", err);
+                }
+            },
+
+            async uploadPasscode(passcode) {
+                if (!GAS_API_URL) return;
+                try {
+                    await fetch(GAS_API_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            action: "update_passcode",
+                            passcode: passcode
+                        })
+                    });
+                } catch (err) {
+                    console.warn("Upload passcode failed:", err);
+                }
+            }
+        };
+
         let logs = [];
         let activeLogId = null;
         let raceCount = 0;
@@ -1567,10 +1688,23 @@
         let globalCategory = 'ALL'; 
 
         // ドキュメント初期化
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             initializeUsers();
             initializePasscode();
             checkSession();
+
+            // バックグラウンドでGASから最新データをダウンロード
+            await SyncManager.downloadData();
+            
+            // データ同期後に画面を静かに更新
+            if (currentUser) {
+                if (currentUser.toLowerCase() === 'sotakanagami') {
+                    renderAdminUsers();
+                    renderAdminLogs();
+                } else {
+                    loadLogs();
+                }
+            }
         });
 
         // パスコード初期化
@@ -1806,6 +1940,7 @@
             });
 
             StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
+            SyncManager.uploadUsers(users); // 👑 スプレッドシートDBに同期
             alert('管理者へのアカウント承認申請が送信されました！\nログインするには管理者（金上颯大）による承認を待つ必要があります。');
             
             document.getElementById('signup-username').value = '';
@@ -1925,6 +2060,7 @@
             if (user) {
                 user.status = 'approved';
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
+                SyncManager.uploadUsers(users); // 👑 スプレッドシートDBに同期
                 alert(`@${username} のアカウントを承認しました。`);
                 renderAdminUsers();
             }
@@ -1940,7 +2076,7 @@
                 }
                 users = users.filter(u => u.username && u.username.toLowerCase() !== username.toLowerCase());
                 StorageHelper.setItem(USERS_KEY, JSON.stringify(users));
-
+                SyncManager.uploadUsers(users); // 👑 スプレッドシートDBに同期
                 alert(`@${username} の申請を却下しました。`);
                 renderAdminUsers();
             }
@@ -1994,6 +2130,7 @@
                 return;
             }
             StorageHelper.setItem(PASSCODE_KEY, val);
+            SyncManager.uploadPasscode(val); // 👑 スプレッドシートDBに同期
             alert(`新規登録用の承認パスコードを「${val}」に変更しました。`);
         }
 
@@ -2015,7 +2152,8 @@
                 }
                 logsAll = logsAll.filter(l => l.username && l.username.toLowerCase() !== username.toLowerCase());
                 StorageHelper.setItem(STORAGE_KEY, JSON.stringify(logsAll));
-
+                SyncManager.uploadUsers(users); // 👑 スプレッドシートDBに同期
+                SyncManager.uploadLogs(logsAll); // 👑 スプレッドシートDBに同期
                 alert(`@${username} のアカウントと練習ノートをすべて削除しました。`);
                 renderAdminUsers();
             }
@@ -2031,6 +2169,7 @@
                 }
                 allLogs = allLogs.filter(l => l.id !== id);
                 StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
+                SyncManager.uploadLogs(allLogs); // 👑 スプレッドシートDBに同期
                 alert('練習ノートを削除しました。');
                 renderAdminLogs();
             }
@@ -2755,6 +2894,7 @@
             }
 
             StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
+            SyncManager.uploadLogs(allLogs); // 👑 スプレッドシートDBに同期
             
             closeModal();
             switchTab(currentTab);
@@ -2800,6 +2940,7 @@
                 }
 
                 StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
+                SyncManager.uploadLogs(allLogs); // 👑 スプレッドシートDBに同期
                 
                 // 表示状態の維持＆部分再レンダリング
                 if (currentTab === 'feed') {
@@ -2841,6 +2982,7 @@
                 });
 
                 StorageHelper.setItem(STORAGE_KEY, JSON.stringify(allLogs));
+                SyncManager.uploadLogs(allLogs); // 👑 スプレッドシートDBに同期
                 input.value = '';
                 
                 if (currentTab === 'feed') {
